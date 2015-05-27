@@ -1,0 +1,6 @@
+The first line of _one.txt.
+
+	The insertion of _two.txt has the same indentation as this line.
+	##insert input/_two.txt
+
+The last line of _one.txt

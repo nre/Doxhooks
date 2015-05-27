@@ -1,0 +1,17 @@
+* text=auto
+
+*.cfg text
+*.css text
+*.html text
+*.ini text
+*.js text
+*.md text
+*.py text
+*.rst text
+*.txt text
+
+.coveragerc text
+.gitattributes text
+.gitignore text
+
+*.png binary

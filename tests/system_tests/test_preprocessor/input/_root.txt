@@ -1,0 +1,68 @@
+Nodes
+=====
+A child node.
+A ##child##.
+
+A parent of a child node.
+A ##parent##.
+
+A grandparent of a child node is a parent of a parent of a child node.
+A ##grandparent##.
+
+A child node is a child node.
+A ##child## is a ##child##.
+
+A child node is not a parent of a child node.
+A ##child## is not a ##parent##.
+
+The number ##integer## is an integer.
+The number ##float## is a float.
+
+
+Directives
+==========
+
+Change the value of a node:
+	##change_quote##
+##set change_quote "change it;"
+	##change_quote##
+##set change_quote "if you can't change it,"
+	##change_quote##
+##set change_quote "change the way you think about it."
+	##change_quote##
+	-- Mary Engelbreit
+
+Define a new node:
+##set creation "One creates from nothing."
+	##creation##
+##set creation "If you try to create from something"
+	##creation##
+##set creation "you're just changing something."
+	##creation##
+	-- Werner Erhard
+
+Write a line:
+##write "* Passes write-a-line test."
+
+Write a string containing a node:
+##write "A ##child##."
+##write "A ##parent##."
+##write "A ##grandparent##."
+
+Perform action if condition is true:
+##if the_earth_is_round write "* Passes action-if-true test."
+
+Do not perform action if condition is false:
+##if the_earth_is_flat write "* Fails no-action-if-false test."
+
+Inclusion of files:
+##include input/_one.txt
+
+Insertion of files:
+##insert input/_one.txt
+
+Inclusion of files:
+##include input/_one.txt
+
+Insertion of files:
+##insert input/_one.txt

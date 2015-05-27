@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+
+	<title>HTML preprocessor test</title>
+</head>
+
+<body>
+<pre>
+Replace character reference with UTF-8 character:
+	Copyright symbol: &copy; &#169; &#xA9;
+
+Replace character reference with named character reference:
+	Acute 'e': &#233; &#xE9;
+
+Replace character reference with decimal character reference:
+	Tilde 'n': &ntilde; &#xF1;
+
+Replace character reference with hexadecimal character reference:
+	Small psi: &psi; &#968;
+
+Replace an entity with arbitrary text:
+	&whatever;
+
+Do not replace an unknown character reference:
+	&unknown;
+</pre>
+</body>
+
+</html>

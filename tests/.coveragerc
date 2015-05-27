@@ -1,0 +1,16 @@
+[run]
+branch = True
+cover_pylib = False
+
+[report]
+ignore_errors = False
+exclude_lines =
+	pragma: no cover
+	def __repr__
+	raise$
+	raise NotImplementedError
+
+[html]
+ignore_errors = False
+title = Doxhooks coverage
+directory = __htmlcov__

@@ -1,0 +1,5 @@
+*.egg-info/
+__pycache__/
+
+__htmlcov__/
+__htmldocs__/
