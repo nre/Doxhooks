@@ -1,6 +1,6 @@
 The first line of _two.txt.
 
-	The insertion of _three.txt has the same indentation as this line.
-	##insert input/_three.txt
+    The insertion of _three.txt has the same indentation as this line.
+    ##insert input/_three.txt
 
 The last line of _two.txt

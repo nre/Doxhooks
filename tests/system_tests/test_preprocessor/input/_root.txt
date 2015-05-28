@@ -23,23 +23,23 @@ Directives
 ==========
 
 Change the value of a node:
-	##change_quote##
+    ##change_quote##
 ##set change_quote "change it;"
-	##change_quote##
+    ##change_quote##
 ##set change_quote "if you can't change it,"
-	##change_quote##
+    ##change_quote##
 ##set change_quote "change the way you think about it."
-	##change_quote##
-	-- Mary Engelbreit
+    ##change_quote##
+    -- Mary Engelbreit
 
 Define a new node:
 ##set creation "One creates from nothing."
-	##creation##
+    ##creation##
 ##set creation "If you try to create from something"
-	##creation##
+    ##creation##
 ##set creation "you're just changing something."
-	##creation##
-	-- Werner Erhard
+    ##creation##
+    -- Werner Erhard
 
 Write a line:
 ##write "* Passes write-a-line test."
