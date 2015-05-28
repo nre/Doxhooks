@@ -9,6 +9,7 @@
 *.py text
 *.rst text
 *.txt text
+*.yml text
 
 .coveragerc text
 .gitattributes text
