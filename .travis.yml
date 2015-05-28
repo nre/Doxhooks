@@ -1,7 +1,9 @@
 language: python
 python:
     - 3.4
-install: pip install .
+install:
+    - pip install .
+    - pip install coverage
 script:
     - cd tests
     - python3 test_runner.py
