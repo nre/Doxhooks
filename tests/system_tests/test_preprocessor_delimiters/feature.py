@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from doxhooks.main import Doxhooks, add_output_roots
 from doxhooks.preprocessor_contexts import PreprocessorContext
 from doxhooks.preprocessors import (

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from doxhooks.main import Doxhooks, add_output_roots
 # Rename ResourceConfiguration as `_` because it is used a lot:
 from doxhooks.resource_configs import ResourceConfiguration as _

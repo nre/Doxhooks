@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from setuptools import setup
 
 from doxhooks import __version__

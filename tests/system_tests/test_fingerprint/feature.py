@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import io
 
 from doxhooks.main import Doxhooks, add_output_roots

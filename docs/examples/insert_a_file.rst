@@ -31,7 +31,7 @@ example.py
 ==========
 
 .. literalinclude:: /../examples/basics/insert_a_file/example.py
-    :emphasize-lines: 14-22, 37-39
+    :emphasize-lines: 15-23, 38-40
 
 
 .. _insert_a_file_html_html:
