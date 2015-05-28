@@ -82,9 +82,11 @@ class OutputFilesTest:
                 self.output_directory, onerror=self._raise_error):
 
             test_path = os.path.join(self.test_output_root, path)
+            entries = os.listdir(test_path)
+            entries.sort()
             test_directories = []
             test_files = []
-            for entry in os.listdir(test_path):
+            for entry in entries:
                 entry_path = os.path.join(test_path, entry)
                 if os.path.isfile(entry_path):
                     test_files.append(entry)
