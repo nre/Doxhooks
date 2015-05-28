@@ -4,4 +4,4 @@ python:
 install: pip install .
 script:
     - cd tests
-    - ./test_runner.py
+    - python3 test_runner.py
