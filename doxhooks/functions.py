@@ -144,8 +144,10 @@ def importattr(import_name):
 
     try:
         module = importlib.import_module(module_name)
-    except ImportError:
-        raise DoxhooksImportError("Cannot find module:", module_name)
+    except ImportError as error:
+        if error.name == module_name:
+            raise DoxhooksImportError("Cannot find module:", module_name)
+        raise
     try:
         return getattr(module, attr_name)
     except AttributeError:
