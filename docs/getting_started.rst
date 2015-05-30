@@ -1,15 +1,15 @@
 Getting Started
 ###############
 
-Please report any problems you have installing Doxhooks: https://github.com/nre/doxhooks/issues.
+`Please report any problems <https://github.com/nre/doxhooks/issues>`_ you have installing Doxhooks.
 
 
 1. Install Python
 *****************
 
-Doxhooks requires version 3.4 of the Python programming language.
+Doxhooks requires Python version 3.3 (or greater).
 
-You can download Python from https://www.python.org/downloads/.
+`Download Python <https://www.python.org/downloads/>`_ and install it.
 
 
 2. Install pip
@@ -17,28 +17,32 @@ You can download Python from https://www.python.org/downloads/.
 
 Doxhooks can be installed by pip.
 
-pip is bundled with Python version 3.4. If pip is not already installed, you can install it with the command::
+pip is bundled with Python version 3.4 (and greater). Install pip with the command::
 
-    python -m ensurepip
+    python3 -m ensurepip
 
-This command installs pip with the name ``pip3``.
+pip is not bundled with Python version 3.3. `Download the get-pip script <https://bootstrap.pypa.io/get-pip.py>`_ (`get-pip.py`:file:) and install pip with the command::
+
+    python3 get-pip.py
+
+If either command fails because ``python3`` cannot be found, try the command again with ``python`` instead of ``python3``.
 
 
 3. Install Doxhooks
 *******************
 
-To install Doxhooks, first try the command::
+Install Doxhooks with the command::
 
     pip3 install doxhooks
 
-and if that does not work, try::
-
-    pip install doxhooks
+If the command fails because ``pip3`` cannot be found, try the command again with ``pip`` instead of ``pip3``.
 
 
 4. Use Doxhooks
 ***************
 
-Copy and paste the files from one of the `Doxhooks examples <examples/examples>`:doc:. To use Doxhooks, either double click on the Python script (`example.py`:file:) or try the command::
+Copy and paste the files from one of the `Doxhooks examples <examples/examples>`:doc:. Run the example script (`example.py`:file:) with the command::
 
-    python example.py
+    python3 example.py
+
+If the command fails because ``python3`` cannot be found, try the command again with ``python`` instead of ``python3``.
