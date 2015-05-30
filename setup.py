@@ -20,7 +20,7 @@ setup(
     url="https://github.com/nre/doxhooks",
 
     author="Nick Evans",
-    author_email="nre@users.noreply.github.com",
+    author_email="nick.evans3976@gmail.com",
 
     license="MIT",
 
