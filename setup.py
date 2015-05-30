@@ -35,6 +35,7 @@ setup(
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Topic :: Software Development :: Build Tools",
         "Topic :: Software Development :: Pre-processors",

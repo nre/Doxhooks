@@ -46,11 +46,10 @@ class OutputFilesTest:
         monkeypatch.syspath_prepend(self.dir_path)
 
         try:
-            old_user_module = sys.modules[self.user_module_name]
+            del sys.modules[self.user_module_name]
         except KeyError:
-            self.user_module = importlib.import_module(self.user_module_name)
-        else:
-            self.user_module = importlib.reload(old_user_module)
+            pass
+        self.user_module = importlib.import_module(self.user_module_name)
 
     def _redirect_copy(self, input_path, output_path):
         # A patch for doxhooks.fileio.copy.
