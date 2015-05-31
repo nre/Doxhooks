@@ -5,8 +5,15 @@ from doxhooks import __version__
 
 
 with open("README.rst") as readme:
-    lines = list(readme)[3:]  # Title takes up first three lines.
-    long_description = "".join(lines)
+    lines = list(readme)
+
+for line_no, line in enumerate(lines):
+    if line.startswith("Doxhooks helps you"):
+        long_description = "".join(lines[line_no:])
+        break
+else:
+    raise RuntimeError("Cannot find long description in README.")
+
 
 setup(
     name="Doxhooks",
