@@ -2,7 +2,7 @@ Copy a File
 ###########
 
 
-Directories and Files
+Directories and files
 *********************
 
 * :ref:`copy_a_file_example_py`

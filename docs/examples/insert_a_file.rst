@@ -2,7 +2,7 @@ Insert a File
 #############
 
 
-Directories and Files
+Directories and files
 *********************
 
 * :ref:`insert_a_file_example_py`

@@ -29,7 +29,7 @@ Preprocessors
 * Mix and match preprocessors with preprocessor mini-languages.
 
 
-Preprocessor Mini-Languages
+Preprocessor mini-languages
 ***************************
 
 * Create customised preprocessor `mini-languages <mini-language>`:term: by extending and overriding other preprocessor mini-languages, including the built-in preprocessor mini-language.

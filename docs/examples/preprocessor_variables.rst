@@ -2,7 +2,7 @@ Preprocessor Variables
 ######################
 
 
-Directories and Files
+Directories and files
 *********************
 
 * :ref:`preprocessor_variables_example_py`

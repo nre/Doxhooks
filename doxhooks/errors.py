@@ -5,7 +5,7 @@ All Doxhooks exceptions derive from `DoxhooksError`, which derives from
 `Exception`. Exceptional conditions can arise when Doxhooks is handling
 input data (`DoxhooksDataError`) or files (`DoxhooksFileError`).
 
-Doxhooks Exception Hierarchy
+Doxhooks exception hierarchy
 ****************************
 
 * `Exception`
