@@ -32,8 +32,8 @@ setup(
     license="MIT",
 
     keywords=(
-        "abstract, build, code, document, file, hook, "
-        "preprocessor, project, resource, source, text"
+        "abstract build code document file hook "
+        "preprocessor project resource source text"
     ),
     classifiers=[
         "Development Status :: 4 - Beta",
