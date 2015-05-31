@@ -1,5 +1,5 @@
-Doxhooks Documentation
-######################
+Doxhooks
+########
 
 Doxhooks helps you to write and maintain the files in your project by letting you write abstractions for your content and tasks. You can abstract away your duplicate content, boilerplate code, debug code, modules, templates, data, cross-references, file paths, URLs, build tasks, etc. You can even abstract away the `preprocessor`:term: logic by defining your own preprocessor `mini-languages <mini-language>`:term:.
 
