@@ -1,4 +1,3 @@
-# TODO: stdlib logging and warning?
 """
 Format the information sent through the standard streams.
 

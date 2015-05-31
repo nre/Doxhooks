@@ -85,7 +85,7 @@ class BasePreprocessorContext:
             try:
                 value = findvalue(value, identifier)
             except DoxhooksLookupError as error:
-                # TODO: Provide more useful info than repr.
+                # FIXME: Provide more useful info than repr.
                 error.description = repr(value)
                 raise
         return value

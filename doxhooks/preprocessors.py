@@ -1,4 +1,3 @@
-# TODO: Subclass interface.
 """
 General-purpose and HTML lexical preprocessors.
 

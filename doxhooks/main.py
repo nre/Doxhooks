@@ -1,4 +1,3 @@
-# TODO: Error context manager and configuration validation.
 """
 User-friendly encapsulations of the Doxhooks components.
 

@@ -131,7 +131,6 @@ class ResourceEnvironment:
         for resource_id in self._resource_ids:
             self.update(resource_id)
 
-    # TODO: Multiple input paths.
     def update_dependents(self, input_path, *, input_root=None):
         """
         Update all resources that depend on a given input file.

@@ -1,4 +1,3 @@
-# TODO: Mention customisation options in the extended summary.
 """
 Mangle a filename with a fingerprint of some relevant data.
 
