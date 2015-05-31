@@ -11,8 +11,6 @@
 import os
 import sys
 
-import sphinx_rtd_theme
-
 
 doxhooks_docs_path = os.path.dirname(__file__)
 doxhooks_dist_path = os.path.join(doxhooks_docs_path, os.pardir)
@@ -21,6 +19,8 @@ sys.path.insert(0, doxhooks_dist_path)
 
 from doxhooks import __version__
 
+
+is_rtd_build = os.environ.get("READTHEDOCS", None) == "True"
 
 project = "Doxhooks"
 copyright = "2015 Nick Evans"
@@ -34,8 +34,10 @@ default_role = "obj"
 add_function_parentheses = False  # Erratic when default_role = "obj".
 add_module_names = False
 
-html_theme = "sphinx_rtd_theme"
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+if not is_rtd_build:
+    import sphinx_rtd_theme
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_use_smartypants = True
 html_domain_indices = False  # If True, see modindex_common_prefix.
 html_show_sourcelink = False
