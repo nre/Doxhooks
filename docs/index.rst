@@ -19,9 +19,4 @@ Contents
     modules/modules
     glossary
 
-
-Indices
-*******
-
 * :ref:`genindex`
-* :ref:`search`
