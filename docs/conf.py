@@ -42,10 +42,6 @@ html_use_smartypants = True
 html_domain_indices = False  # If True, see modindex_common_prefix.
 html_show_sourcelink = False
 
-latex_elements = {
-    "preamble": "\\usepackage{enumitem}\n\\setlistdepth{50}",
-}
-
 
 extensions = [
     "sphinx.ext.autodoc",
