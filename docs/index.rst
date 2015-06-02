@@ -5,6 +5,8 @@ Doxhooks helps you to write and maintain the files in your project by letting yo
 
 Beginners can start using Doxhooks by customising the `example scripts <examples/examples>`:doc:. Users with knowledge of the Python programming language can extend Doxhooks with their own code.
 
+Doxhooks is open-source software distributed under an MIT license. The latest versions of the Doxhooks `distribution package <https://pypi.python.org/pypi/doxhooks>`_, `documentation <http://doxhooks.readthedocs.org/>`_ and `source code <https://github.com/nre/doxhooks>`_ are available online.
+
 
 Contents
 ********
