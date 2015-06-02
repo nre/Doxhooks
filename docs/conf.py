@@ -21,6 +21,7 @@ from doxhooks import __version__
 
 
 is_rtd_build = os.environ.get("READTHEDOCS", None) == "True"
+needs_sphinx = "1.3"
 
 project = "Doxhooks"
 copyright = "2015 Nick Evans"
