@@ -24,12 +24,13 @@ setup(
     ),
     long_description=long_description,
 
+    license="MIT",
+    platforms=["any"],
+
     url="https://github.com/nre/doxhooks",
 
     author="Nick Evans",
     author_email="nick.evans3976@gmail.com",
-
-    license="MIT",
 
     keywords=(
         "abstract build code document file hook "
@@ -37,6 +38,7 @@ setup(
     ),
     classifiers=[
         "Development Status :: 4 - Beta",
+        "Environment :: Console",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
@@ -49,4 +51,5 @@ setup(
     ],
 
     packages=["doxhooks"],
+    zip_safe=True,
 )
