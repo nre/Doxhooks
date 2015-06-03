@@ -21,4 +21,6 @@ Contents
     modules/modules
     glossary
 
+
+* :ref:`changelog`
 * :ref:`genindex`
