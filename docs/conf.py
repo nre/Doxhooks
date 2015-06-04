@@ -42,6 +42,11 @@ if not is_rtd_build:
 html_use_smartypants = True
 html_domain_indices = False  # If True, see modindex_common_prefix.
 html_show_sourcelink = False
+html_static_path = ["static"]
+
+
+def setup(app):
+    app.add_stylesheet("custom.css")
 
 
 extensions = [

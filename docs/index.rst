@@ -22,5 +22,5 @@ Contents
     glossary
 
 
-* :ref:`changelog`
+* :doc:`changelog`
 * :ref:`genindex`
