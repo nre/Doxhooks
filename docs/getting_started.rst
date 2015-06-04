@@ -41,7 +41,7 @@ If the command fails because ``pip3`` cannot be found, try the command again wit
 4. Use Doxhooks
 ***************
 
-Copy and paste the files from one of the `Doxhooks examples <examples/examples>`:doc:. Run the example script (`example.py`:file:) with the command::
+Copy and paste the files from one of the `Doxhooks examples <examples>`:doc:. Run the example script (`example.py`:file:) with the command::
 
     python3 example.py
 
