@@ -1,6 +1,6 @@
-build/
-dist/
-*.egg-info/
+/build/
+/dist/
+/Doxhooks.egg-info/
 __pycache__/
 
 __htmlcov__/
