@@ -79,9 +79,8 @@ class ResourceAddress:
             raise DoxhooksDataError(
                 "Resource {!r} URL path starts with {!r}: {!r}"
                 .format(self._resource_id, os.pardir, path))
-        if os.sep != "/":  # pragma: no branch
-            path = path.replace(os.sep, "/")
-        return "{}/{}".format(self._prefix, path.lstrip("/"))
+        slash_path = path.replace(os.sep, "/")
+        return "{}/{}".format(self._prefix, slash_path.lstrip("/"))
 
     def leak_default(self):
         """
