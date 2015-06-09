@@ -2,114 +2,191 @@
 import os
 import re
 import sys
+from argparse import ArgumentParser
+from functools import partial
 
 import pytest
 from coverage import coverage
 
 
-dist_name = "doxhooks"
-packages = ["doxhooks"]
+DIST_NAME = "doxhooks"
+PACKAGES = {"doxhooks"}
 
-tests_path = os.path.dirname(os.path.abspath(__file__))
-unit_tests_path = os.path.join(tests_path, "unit_tests")
-component_tests_path = os.path.join(tests_path, "component_tests")
-system_tests_path = os.path.join(tests_path, "system_tests")
-example_tests_path = os.path.join(tests_path, "example_tests")
-dist_path = os.path.normpath(os.path.join(tests_path, os.pardir))
-pkg_paths = [os.path.join(dist_path, pkg) for pkg in packages]
+TESTS_ROOT = os.path.dirname(os.path.abspath(__file__))
+DIST_ROOT = os.path.normpath(os.path.join(TESTS_ROOT, os.pardir))
+PACKAGE_ROOTS = {os.path.join(DIST_ROOT, pkg) for pkg in PACKAGES}
+
+UNIT_TESTS_ROOT = os.path.join(TESTS_ROOT, "unit_tests")
+COMPONENT_TESTS_ROOT = os.path.join(TESTS_ROOT, "component_tests")
+SYSTEM_TESTS_ROOT = os.path.join(TESTS_ROOT, "system_tests")
+EXAMPLE_TESTS_ROOT = os.path.join(TESTS_ROOT, "example_tests")
+
+ALL_TEST_ROOTS = [
+    UNIT_TESTS_ROOT,
+    COMPONENT_TESTS_ROOT,
+    SYSTEM_TESTS_ROOT,
+    EXAMPLE_TESTS_ROOT,
+]
 
 
-def fail(*args):
-    error_message = "[test_runner] " + " ".join(map(str, args))
-    sys.exit(error_message)
+def error_message(*args):
+    sys.exit(" ".join(map(str, args)))
 
 
-def get_import_name(*args):
-    import_path = os.path.normpath(os.path.join(dist_name, *args))
-    return import_path.replace(os.sep, ".")
+def first_truthy(iterable):
+    return next(filter(None, iterable), None)
+
+
+def list_of_str(args):
+    return [args] if isinstance(args, str) else args
+
+
+def dot_path(path):
+    stem, __ = os.path.splitext(os.path.normpath(path))
+    return stem.replace(os.sep, ".")
+
+
+def slash_path(path):
+    return path.replace(os.sep, "/")
+
+
+def is_subpath(path, root):
+    rel_path = os.path.normpath(os.path.relpath(path, root))
+    return not rel_path.startswith(os.pardir)
+
+
+def is_test_file(path):
+    __, filename = os.path.split(path)
+    return filename.startswith("test_")
 
 
 def pytest_main(args):
-    if isinstance(args, str):
-        args = args,
-    # pytest does not recognise backslash as a path separator:
-    if os.sep != "/":
-        args = [string.replace(os.sep, "/") for string in args]
-    exit_code = pytest.main(args)
-    if exit_code:
-        fail("pytest returned", exit_code)
+    # NB: pytest does not recognise backslash as a path separator.
+    paths = [slash_path(path) for path in list_of_str(args)]
+    missing_files = [path for path in paths if not os.path.exists(path)]
+    if missing_files:
+        plural = "s" if len(missing_files) > 1 else ""
+        error_message("Test{} not found:".format(plural), *missing_files)
+    return pytest.main(paths)
 
 
-def coverage_test(source, pytest_args):
+def all_test_roots_if_none(arg):
+    return ALL_TEST_ROOTS if arg is None else None
+
+
+def is_unit_test(path):
+    return is_subpath(path, UNIT_TESTS_ROOT) and is_test_file(path)
+
+
+def is_integration_test(path):
+    roots = COMPONENT_TESTS_ROOT, SYSTEM_TESTS_ROOT, EXAMPLE_TESTS_ROOT
+    return (any(is_subpath(path, root) for root in roots) and
+            is_test_file(path))
+
+
+def path_if_unit_test_path(path):
+    return path if is_unit_test(path) else None
+
+
+def path_if_integration_test_path(path):
+    return path if is_integration_test(path) else None
+
+
+def unit_test_path(source_path, pkg_root):
+    rel_source_path = os.path.relpath(source_path, pkg_root)
+    rel_dir_path, file = os.path.split(rel_source_path)
+    return os.path.join(UNIT_TESTS_ROOT, rel_dir_path, "test_" + file)
+
+
+def unit_test_path_if_source_file(path):
+    return first_truthy(
+        (unit_test_path(path, pkg_root) for pkg_root in PACKAGE_ROOTS
+            if is_subpath(path, pkg_root))
+    )
+
+
+def compute_pytest_args(path):
+    return first_truthy(
+        (f(path) for f in [
+            all_test_roots_if_none,
+            path_if_unit_test_path,
+            path_if_integration_test_path,
+            unit_test_path_if_source_file,
+            partial(error_message, "Path not handled:"),
+        ])
+    )
+
+
+def unit_of_unit_test(test_path):
+    dirs, file = os.path.split(os.path.relpath(test_path, UNIT_TESTS_ROOT))
+    module = re.match("test_(?P<module>\w+)\.py$", file).group("module")
+    return dot_path(os.path.join(DIST_NAME, dirs, module))
+
+
+def coverage_kwargs(pytest_args):
+    if pytest_args is ALL_TEST_ROOTS:
+        source = DIST_NAME
+        report = True
+    elif is_unit_test(pytest_args):
+        source = unit_of_unit_test(pytest_args)
+        report = True
+    else:
+        source = DIST_NAME
+        report = False
+    return dict(source=source, report=report)
+
+
+def with_coverage(f, source, *, report=True, data=False):
     cov = coverage(source=[source])
     cov.start()
     try:
-        pytest_main(pytest_args)
+        exit_code = f()
     finally:
         cov.stop()
-    print()  # Print blank line.
-    cov.report(show_missing=False)
-    cov.html_report()
+    if not exit_code:
+        if report:
+            print()  # Print blank line.
+            cov.report(show_missing=False)
+            cov.html_report()
+        if data:
+            cov.save()
+    return exit_code
 
 
-def unit_test(path):
-    dir_path, file = os.path.split(path)
-    match = re.match("test_(?P<module>\w*)\.py$", file)
-    module = match.group("module")
-    pkgs = os.path.relpath(dir_path, unit_tests_path)
-    import_name = get_import_name(pkgs, module)
-    coverage_test(import_name, path)
+def parse_args():
+    parser = ArgumentParser(description="Run the Doxhooks tests.")
+    parser.add_argument(
+        "path", help="path to source file or test file", nargs="?")
+    parser.add_argument(
+        "--data", help="save coverage data", action="store_true")
+    args = parser.parse_args()
+
+    return dict(path=args.path, data=args.data)
 
 
-def test_all():
-    test_order = [
-        unit_tests_path,
-        component_tests_path,
-        system_tests_path,
-        example_tests_path,
-    ]
-    coverage_test(dist_name, test_order)
+def main(path=None, *, data=False):
+    if path is not None:
+        path = os.path.abspath(path)
 
+    pytest_args = compute_pytest_args(path)
 
-def find_unit_test_for_source_file(relpath):
-    pkgs_module, __ = os.path.splitext(relpath)
-    import_name = get_import_name(pkgs_module)
-    dirs, file = os.path.split(relpath)
-    test_path = os.path.join(unit_tests_path, dirs, "test_" + file)
-    if not os.path.exists(test_path):
-        fail("Test path not found:", test_path)
-    coverage_test(import_name, test_path)
+    # - coverage imports from cwd in preference to sys.path. This causes
+    #   problems if the cwd is DIST_ROOT because coverage imports the
+    #   package directory instead of the package module.
+    # - coverage config and output files go in TESTS_ROOT.
+    # - Paths in pytest stdout are easier to read relative to TESTS_ROOT.
+    cwd = os.getcwd()
+    os.chdir(TESTS_ROOT)
 
-
-def main(arg_path):
-    path = os.path.abspath(arg_path)
-    __, filename = os.path.split(path)
-
-    if path.startswith(tests_path):
-        if not filename.startswith("test_"):
-            fail("Not a test file:", path)
-        elif path.startswith(unit_tests_path):
-            unit_test(path)
-        elif (path.startswith(component_tests_path) or
-                path.startswith(system_tests_path) or
-                path.startswith(example_tests_path)):
-            pytest_main(path)
-        return
-    for pkg_path in pkg_paths:
-        if path.startswith(pkg_path):
-            relpath = os.path.relpath(path, pkg_path)
-            find_unit_test_for_source_file(relpath)
-            return
-    fail("Path not handled:", path)
+    try:
+        return with_coverage(
+            partial(pytest_main, pytest_args),
+            data=data,
+            **coverage_kwargs(pytest_args)
+        )
+    finally:
+        os.chdir(cwd)
 
 
 if __name__ == "__main__":
-    try:
-        arg_path = sys.argv[1]
-    except IndexError:
-        arg_path = None
-
-    if arg_path is not None:
-        main(arg_path)
-    else:
-        test_all()
+    sys.exit(main(**parse_args()))
