@@ -31,17 +31,19 @@ def withraises(method):
 class OutputFilesTest:
     @property
     def dir_path(self):
-        # Return the dir path of the module that imports this class.
+        # Return the dir path of the module that subclassed this class.
         try:
             dir_path = self._dir_path
         except AttributeError:
-            nodes = self.__module__.split(".")
-            dir_path = os.path.abspath(os.path.join(*nodes[:-1]))
+            module = sys.modules[self.__module__]
+            dir_path = os.path.dirname(module.__file__)
             self._dir_path = dir_path
         return dir_path
 
     @fixture(autouse=True)
     def _setup_user_module(self, monkeypatch):
+        # Setup the cwd and import path for the module that subclassed
+        # this class.
         monkeypatch.chdir(self.dir_path)
         monkeypatch.syspath_prepend(self.dir_path)
 
