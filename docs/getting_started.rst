@@ -17,32 +17,29 @@ Mac and Windows users can `download Python <https://www.python.org/downloads/>`_
 
 Doxhooks can be installed by pip.
 
-pip is bundled with Python 3.4 (and newer versions). Install pip with the command::
+pip is bundled with Python 3.4 (and newer versions). Install pip with the command:
 
-    python3 -m ensurepip
+:Mac and \*nix: ``python3 -m ensurepip``
+:Windows: ``py -3 -m ensurepip``
 
-pip is not bundled with Python 3.3. `Download the get-pip script <https://bootstrap.pypa.io/get-pip.py>`_ (`get-pip.py`:file:) and install pip with the command::
+pip is not bundled with Python 3.3. `Download the get-pip script <https://bootstrap.pypa.io/get-pip.py>`_ (`get-pip.py`:file:) then install pip with the command:
 
-    python3 get-pip.py
-
-If either command fails because ``python3`` cannot be found, try the command again with ``python`` instead of ``python3``. Windows users can also try ``py`` instead of ``python3``.
+:Mac and \*nix: ``python3 get-pip.py``
+:Windows: ``py -3 get-pip.py``
 
 
 3. Install Doxhooks
 *******************
 
-Install Doxhooks with the command::
+Install Doxhooks with the command:
 
-    pip3 install doxhooks
-
-If the command fails because ``pip3`` cannot be found, try the command again with ``pip`` instead of ``pip3``.
+:Mac, \*nix and Windows: ``pip3 install doxhooks``
 
 
 4. Use Doxhooks
 ***************
 
-Copy and paste the files from one of the `Doxhooks examples <examples>`:doc:. Run the example script (`example.py`:file:) with the command::
+Copy and paste the files from one of the `Doxhooks examples <examples>`:doc:. Run the example script (`example.py`:file:) with the command:
 
-    python3 example.py
-
-If the command fails because ``python3`` cannot be found, try the command again with ``python`` instead of ``python3``. Windows users can also try ``py`` instead of ``python3``.
+:Mac and \*nix: ``./example.py`` (or ``python3 example.py``)
+:Windows: ``example.py`` (or ``py example.py``)
