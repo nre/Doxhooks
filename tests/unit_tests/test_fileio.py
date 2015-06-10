@@ -14,9 +14,8 @@ class BaseTestFileIO:
     text_encoding = "utf-8"
 
     @fixture
-    def output_tmpdir(self, tmpdir):
-        fileio.add_output_roots(tmpdir.strpath)
-        return tmpdir
+    def directory_path(self, tmpdir):
+        return tmpdir.strpath
 
     @fixture
     def input_file_path(self, tmpdir):
@@ -25,33 +24,40 @@ class BaseTestFileIO:
         return file.strpath
 
     @fixture
+    def missing_input_file_path(self, tmpdir):
+        path = tmpdir.join("missing.dat").strpath
+        assert not os.path.exists(path)
+        return path
+
+    @fixture
+    def output_tmpdir(self, tmpdir):
+        fileio.add_output_roots(tmpdir.strpath)
+        return tmpdir
+
+    @fixture
     def output_file_path(self, output_tmpdir):
         path = output_tmpdir.join("output.dat").strpath
         assert not os.path.exists(path)
         return path
 
     @fixture
-    def filename_only_path(self, monkeypatch, output_tmpdir):
+    def cwd_output_file_path(self, monkeypatch, output_tmpdir):
         monkeypatch.chdir(output_tmpdir.strpath)
-        filename = "fileonly.dat"
+        filename = "cwd_file.dat"
         assert not os.path.exists(filename)
         return filename
 
     @fixture
-    def missing_file_path(self, output_tmpdir):
-        path = output_tmpdir.join("missing.dat").strpath
-        assert not os.path.exists(path)
-        return path
-
-    @fixture
-    def missing_directory_and_file_path(self, output_tmpdir):
+    def new_output_directory_and_file_path(self, output_tmpdir):
         path = output_tmpdir.join("missing_dir", "missing.dat").strpath
         assert not os.path.exists(path)
         return path
 
     @fixture
-    def directory_path(self, tmpdir):
-        return tmpdir.strpath
+    def generic_file_path(self, output_tmpdir):
+        file = output_tmpdir.join("filename.src")
+        file.ensure()
+        self.path = file.strpath
 
     @fixture(params=["", "/"])
     def invalid_path(self, request):
@@ -63,12 +69,6 @@ class BaseTestFileIO:
 
         request.addfinalizer(remove_output_root)
         return path
-
-    @fixture
-    def generic_file_path(self, output_tmpdir):
-        file = output_tmpdir.join("filename.src")
-        file.ensure()
-        self.path = file.strpath
 
     @fixture
     def open_input(self):
@@ -110,25 +110,25 @@ class TestCopying(BaseTestFileIO):
 
         self.then_the_file_exists(output_file_path)
 
-    def test_missing_output_directories_are_silently_made(
-            self, input_file_path, missing_directory_and_file_path):
+    def test_new_output_directories_are_silently_made(
+            self, input_file_path, new_output_directory_and_file_path):
         self.when_copying_a_file_from_an_input_path_to_an_output_path(
-            input_file_path, missing_directory_and_file_path)
+            input_file_path, new_output_directory_and_file_path)
 
-        self.then_the_file_exists(missing_directory_and_file_path)
+        self.then_the_file_exists(new_output_directory_and_file_path)
 
     def test_copying_to_a_filename_without_a_directory_is_not_an_error(
-            self, input_file_path, filename_only_path):
+            self, input_file_path, cwd_output_file_path):
         try:
             self.when_copying_a_file_from_an_input_path_to_an_output_path(
-                input_file_path, filename_only_path)
+                input_file_path, cwd_output_file_path)
         except DoxhooksFileSystemError:
             fail("Copying to a filename-only path should not raise an error.")
 
     def test_copying_a_missing_file_is_an_error(
-            self, missing_file_path, output_file_path):
+            self, missing_input_file_path, output_file_path):
         self.when_copying_a_file_from_an_input_path_to_an_output_path(
-            missing_file_path, output_file_path,
+            missing_input_file_path, output_file_path,
             raises=DoxhooksFileSystemError)
 
         assert self.error
@@ -205,30 +205,39 @@ class TestOpeningAnInputFile(BaseTestFileIO):
     def when_opening_an_input_file(self, path):
         self._open(path, self.no_encoding, newline=None)
 
-    def test_opening_a_missing_input_file_is_an_error(self, missing_file_path):
+    def test_opening_a_missing_input_file_is_an_error(
+            self, missing_input_file_path):
         self.when_opening_an_input_file(
-            missing_file_path, raises=DoxhooksFileSystemError)
+            missing_input_file_path, raises=DoxhooksFileSystemError)
 
         assert self.error
 
 
 @mark.usefixtures("open_output")
 class TestOpeningAnOutputFile(BaseTestFileIO):
+    @withraises
     def when_opening_an_output_file(self, path):
         self._open(path, self.no_encoding, newline=None)
 
-    def test_missing_output_directories_are_silently_made(
-            self, missing_directory_and_file_path):
-        self.when_opening_an_output_file(missing_directory_and_file_path)
+    def test_new_output_directories_are_silently_made(
+            self, new_output_directory_and_file_path):
+        self.when_opening_an_output_file(new_output_directory_and_file_path)
 
-        self.then_the_file_exists(missing_directory_and_file_path)
+        self.then_the_file_exists(new_output_directory_and_file_path)
 
     def test_opening_a_filename_without_a_directory_is_not_an_error(
-            self, filename_only_path):
+            self, cwd_output_file_path):
         try:
-            self.when_opening_an_output_file(filename_only_path)
+            self.when_opening_an_output_file(cwd_output_file_path)
         except DoxhooksFileSystemError:
             fail("Opening a filename-only path should not raise an error.")
+
+    def test_opening_an_output_file_with_a_non_output_path_is_an_error(
+            self, input_file_path):
+        self.when_opening_an_output_file(
+            input_file_path, raises=DoxhooksOutputPathError)
+
+        assert self.error
 
 
 @mark.usefixtures("open_input_and_output", "generic_file_path")
@@ -288,6 +297,7 @@ class TestConvenienceWrappers(BaseTestFileIO):
         # then the data is returned.
         assert returned_data == data
 
+    @withraises
     def when_saving_data_to_a_file(self, path, data, encoding, newline=None):
         fileio.save(path, data, encoding, newline)
 
@@ -308,3 +318,11 @@ class TestConvenienceWrappers(BaseTestFileIO):
         with open(path, "br") as file:
             file_contents = file.read()
         assert file_contents == data_bytes
+
+    def test_saving_data_to_a_non_output_path_is_an_error(
+            self, input_file_path):
+        self.when_saving_data_to_a_file(
+            input_file_path, "data", self.text_encoding,
+            raises=DoxhooksOutputPathError)
+
+        assert self.error
