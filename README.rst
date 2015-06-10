@@ -4,6 +4,9 @@ Doxhooks
 .. image:: https://travis-ci.org/nre/Doxhooks.svg?branch=master
     :target: https://travis-ci.org/nre/Doxhooks
 
+.. image:: https://ci.appveyor.com/api/projects/status/6m841mvysksmvm0q/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/nre/doxhooks
+
 .. image:: https://coveralls.io/repos/nre/Doxhooks/badge.svg
     :target: https://coveralls.io/r/nre/Doxhooks
 
