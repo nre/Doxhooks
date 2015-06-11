@@ -11,6 +11,10 @@ Doxhooks requires Python 3.3 (or a newer version).
 
 Mac and Windows users can `download Python <https://www.python.org/downloads/>`_ and install it. \*nix users can use their package manager.
 
+.. note::
+
+    It is unnecessary and `probably a bad idea to uninstall Python 2.x <https://docs.python.org/2.7/faq/installed.html#can-i-delete-python>`_.
+
 
 2. Install pip
 **************
