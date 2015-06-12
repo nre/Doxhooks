@@ -2,8 +2,8 @@ Copy a File
 ###########
 
 
-Directories and files
-*********************
+File tree
+*********
 
 * :ref:`copy_a_file_example_py`
 * source
@@ -17,8 +17,8 @@ Directories and files
   * robots.txt
 
 
-Code
-****
+Files
+*****
 
 .. _copy_a_file_example_py:
 

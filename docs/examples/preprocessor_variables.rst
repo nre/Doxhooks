@@ -2,13 +2,13 @@ Preprocessor Variables
 ######################
 
 
-Directories and files
-*********************
+File tree
+*********
 
 * :ref:`preprocessor_variables_example_py`
 * source
 
-  * :ref:`preprocessor_variables_html_html`
+  * :ref:`preprocessor_variables_film_html`
 
 * www
 
@@ -16,8 +16,8 @@ Directories and files
   * :ref:`placesun_html`
 
 
-Code
-****
+Files
+*****
 
 .. _preprocessor_variables_example_py:
 
@@ -27,12 +27,12 @@ example.py
 .. literalinclude:: /../examples/basics/preprocessor_variables/example.py
 
 
-.. _preprocessor_variables_html_html:
+.. _preprocessor_variables_film_html:
 
-_html.html
+_film.html
 ==========
 
-.. literalinclude:: /../examples/basics/preprocessor_variables/source/_html.html
+.. literalinclude:: /../examples/basics/preprocessor_variables/source/_film.html
     :language: html
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from doxhooks.main import Doxhooks, add_output_roots
-# Rename ResourceConfiguration as `_` because it is used a lot:
+# Rename ResourceConfiguration as '_' because it is used a lot:
 from doxhooks.resource_configs import ResourceConfiguration as _
 from doxhooks.resources import Resource
 
@@ -11,7 +11,7 @@ my_resource_configs = [
     # The first resource is a copy of source/image.png. The copy will be
     # www/logo.png:
 
-    _(  # NB: `_` is the name we gave to ResourceConfiguration.
+    _(  # NB: '_' is the name we gave to ResourceConfiguration.
         Resource,
         input_filename="source/image.png",
         output_filename="www/logo.png",

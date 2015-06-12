@@ -2,8 +2,8 @@ Insert a File
 #############
 
 
-Directories and files
-*********************
+File tree
+*********
 
 * :ref:`insert_a_file_example_py`
 * source
@@ -22,8 +22,8 @@ Directories and files
   * :ref:`daywrath_html`
 
 
-Code
-****
+Files
+*****
 
 .. _insert_a_file_example_py:
 

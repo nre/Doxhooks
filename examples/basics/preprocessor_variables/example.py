@@ -9,18 +9,18 @@ from doxhooks.resources import PreprocessedResource
 # resources into a shared context:
 class MyHTMLContext(PreprocessorContext):
 
-    # Define the values of some variables in the context of my HTML
-    # resources:
-    lang = "en"
-    charset = "UTF-8"
+    # Define 'author' to mean 'Alan Smithee' in this context:
     author = "Alan Smithee"
 
-    # Define a variable `title` with a value that depends on the
-    # variables `film_title` and `author`:
+    lang = "en"
+    charset = "UTF-8"
+
+    # Define a variable 'title' with a value that depends on the
+    # variables 'film_title' and 'author':
     title = "##film_title## | ##author##'s Film Blog"
 
-    # NB: The value of `title` can depend on the values of `film_title`
-    # and `author` because Doxhooks preprocesses these values in the
+    # NB: The value of 'title' can depend on the values of 'film_title'
+    # and 'author' because Doxhooks preprocesses these values in the
     # same way that it preprocesses input files.
     #
     # See 'preprocessor node' in the glossary for more details.
@@ -38,7 +38,7 @@ class MyHTMLResource(PreprocessedResource):
 my_resource_configs = [
     _(
         MyHTMLResource,
-        input_filename="source/_html.html",
+        input_filename="source/_film.html",
         output_filename="www/caligari.html",
 
         # Define the values of some variables in the context of this
@@ -50,13 +50,13 @@ my_resource_configs = [
     ),
     _(
         MyHTMLResource,
-        input_filename="source/_html.html",
+        input_filename="source/_film.html",
         output_filename="www/placesun.html",
 
         context_vars={
 
-            # Override the value of `description` in the shared context
-            # (`MyHTMLContext`) with a different value in the context of
+            # Override the value of 'description' in the shared context
+            # (MyHTMLContext) with a different value in the context of
             # this resource:
             "description": "Info on '##film_title##'.",
 
@@ -73,8 +73,8 @@ def main():
     Doxhooks(my_resource_configs).update_all()
     # Doxhooks will:
     # - Make the output directory 'www'.
-    # - Read source/_html.html and write www/caligari.html.
-    # - Read source/_html.html and write www/placesun.html.
+    # - Read source/_film.html and write www/caligari.html.
+    # - Read source/_film.html and write www/placesun.html.
 
 
 if __name__ == "__main__":
