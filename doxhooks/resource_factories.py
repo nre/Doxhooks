@@ -165,8 +165,8 @@ class ResourceFactory:
         except AttributeError:  # pragma: no branch
             output_branches = self._get_config("output_branches")
             url_branches = ChainMap(
-                output_branches,
                 self._get_config("url_branches"),
+                output_branches,
             )
             tree = OutputFileTree(
                 self._class.output_branch,
