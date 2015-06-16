@@ -111,6 +111,7 @@ class ResourceFactory:
         except AttributeError:  # pragma: no branch
             tree = FileTree(
                 self._get_config("input_branches"),
+                name="`input_branches`"
             )
             self._lazy_input_filetree = tree
         return tree
@@ -146,6 +147,7 @@ class ResourceFactory:
         except AttributeError:  # pragma: no branch
             tree = FileTree(
                 self._get_config("output_branches"),
+                name="`output_branches`"
             )
             self._lazy_output_filetree = tree
         return tree
@@ -185,6 +187,7 @@ class ResourceFactory:
                     self._get_config("url_branches"),
                     self._get_config("output_branches"),
                 ),
+                name="`ChainMap(url_branches, output_branches)`"
             )
             self._lazy_url_filetree = tree
         return tree
