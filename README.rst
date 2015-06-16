@@ -14,45 +14,10 @@ Doxhooks helps you to write and maintain the files in your project by letting yo
 
 Beginners can start using Doxhooks by customising the example scripts. Users with knowledge of the Python programming language can extend Doxhooks with their own code.
 
-Doxhooks is open-source software distributed under an MIT license. The latest versions of the Doxhooks `distribution package <https://pypi.python.org/pypi/doxhooks>`_, `documentation <http://doxhooks.readthedocs.org/>`_ and `source code <https://github.com/nre/doxhooks>`_ are available online.
-
-
-Features
-********
-
-Doxhooks has three main classes of abstractions: Resources (files), preprocessors and preprocessor mini-languages.
-
-
-Resources
-=========
-
-* Give names to files and directories, instead of hard-coding their paths.
-* Refer to URLs by the identity of their resources, instead of hard-coding the URLs.
-* Give a resource a default URL (based on its output path) or override the default.
-* Mangle a URL and output filename with a custom fingerprint of the resource content.
-* Update one resource, or all resources, or all resources that depend on a given input file.
-* Specify the order in which resources are updated.
-* Mix and match resources with preprocessors and preprocessor mini-languages.
-
-
-Preprocessors
-=============
-
-* Create customised preprocessors by extending and overriding other preprocessors, including the built-in general-purpose lexical preprocessor.
-* Use different types of preprocessors for different types of resources in the same project.
-* Customise the delimiters of the preprocessor directives and variables.
-* Apply character encodings and newline conventions to the output files.
-* Replace HTML character references with Unicode characters, other character references, etc.
-* See a preprocessor 'stack trace' when an error occurs in a preprocessor directive or variable.
-* Evaluate preprocessor variables recursively and late.
-* Mix and match preprocessors with preprocessor mini-languages.
-
-
-Preprocessor mini-languages
-===========================
-
-* Create customised preprocessor mini-languages by extending and overriding other preprocessor mini-languages, including the built-in preprocessor mini-language.
-* Use different types of preprocessor mini-languages for different types of resources in the same project.
-* Share data that is common to different resources by using preprocessor variables and the inheritance hierarchy of your preprocessor mini-languages.
-* Create your own common or domain-specific keywords in addition to the built-in keywords: ``insert`` or ``include`` a file, ``write`` a line, ``set`` a variable, raise an ``error`` or print a ``warning``, ``if`` a condition is true.
-* Represent boolean output values in lowercase (``true``) or start-case (``True``), or exclude boolean as a valid output type.
+* `Features <http://doxhooks.readthedocs.org/en/latest/features>`_
+* `Examples <http://doxhooks.readthedocs.org/en/latest/examples>`_
+* `Getting started <http://doxhooks.readthedocs.org/en/latest/getting_started>`_
+* `Documentation <http://doxhooks.readthedocs.org/>`_
+* `Source code <https://github.com/nre/doxhooks>`_
+* `Help, bugs, suggestions <https://github.com/nre/doxhooks/issues>`_
+* Release updates via `Atom feed <https://github.com/nre/doxhooks/releases.atom>`_ and `Twitter <https://twitter.com/doxhooks>`_
