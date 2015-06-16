@@ -54,16 +54,16 @@ class DependencyDatabase:
 
     Example
     -------
-    >>> database = doxhooks.dependency_databases.DependencyDatabase()
-    >>> database.update_dependencies("product1", ["feature1", "feature2"])
-    >>> database.update_dependencies("product2", ["feature1", "feature3"])
-    >>> database.retrieve_products("feature1")  # doctest: +SKIP
+    >>> db = doxhooks.dependency_databases.DependencyDatabase()
+    >>> db.update_dependencies("product1", ["feature1", "feature2"])
+    >>> db.update_dependencies("product2", ["feature1", "feature3"])
+    >>> db.retrieve_products("feature1")  # doctest: +SKIP
     {'product1', 'product2'}
-    >>> database.retrieve_products("feature2")
+    >>> db.retrieve_products("feature2")
     {'product1'}
-    >>> database.retrieve_products("feature3")
+    >>> db.retrieve_products("feature3")
     {'product2'}
-    >>> database.retrieve_products("feature4")
+    >>> db.retrieve_products("feature4")
     set()
     """
 
