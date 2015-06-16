@@ -14,7 +14,7 @@ from collections import ChainMap
 
 from doxhooks.errors import DoxhooksLookupError
 from doxhooks.file_domains import InputFileDomain, OutputFileDomain
-from doxhooks.filetrees import InputFileTree, OutputFileTree
+from doxhooks.filetrees import FileTree
 from doxhooks.preprocessor_factories import PreprocessorFactory
 from doxhooks.resource_addresses import ResourceAddress
 
@@ -40,8 +40,6 @@ class ResourceFactory:
         Make the dependencies of the resource and return them as kwargs.
     _get_config
         Return the named configuration value.
-    _address
-        The address (URL) field of the resource.
     _input_filetree
         The input-file tree of the resource.
     _input_file_domain
@@ -50,6 +48,10 @@ class ResourceFactory:
         The output-file tree of the resource.
     _output_file_domain
         The output-file domain of the resource.
+    _url_filetree
+        The URL file tree of the resource.
+    _address
+        The address (URL) field of the resource.
     """
 
     def __init__(self, resource_class, **kwargs):
@@ -98,39 +100,16 @@ class ResourceFactory:
                 name, self._config_data, "the configuration data")
 
     @property
-    def _address(self):
-        """
-        The address (URL) field of the resource.
-
-        *doxhooks.resource_addresses.ResourceAddress*
-        """
-        try:
-            address = self._lazy_address
-        except AttributeError:  # pragma: no branch
-            address = ResourceAddress(
-                self._get_config("id"),
-                self._get_config("urls"),
-                self._output_filetree,
-                self._class.url_prefix,
-                self._class.url_root,
-                self._class.url_rewrite,
-            )
-            self._lazy_address = address
-        return address
-
-    @property
     def _input_filetree(self):
         """
         The input-file tree of the resource.
 
-        *doxhooks.filetrees.InputFileTree*
+        *doxhooks.filetrees.FileTree*
         """
         try:
             tree = self._lazy_input_filetree
         except AttributeError:  # pragma: no branch
-            tree = InputFileTree(
-                self._class.input_branch,
-                self._get_config("input_filename"),
+            tree = FileTree(
                 self._get_config("input_branches"),
             )
             self._lazy_input_filetree = tree
@@ -148,6 +127,8 @@ class ResourceFactory:
         except AttributeError:  # pragma: no branch
             domain = InputFileDomain(
                 self._input_filetree,
+                self._class.input_branch,
+                self._get_config("input_filename"),
                 self._class.input_encoding,
             )
             self._lazy_input_file_domain = domain
@@ -158,21 +139,13 @@ class ResourceFactory:
         """
         The output-file tree of the resource.
 
-        *doxhooks.filetrees.OutputFileTree*
+        *doxhooks.filetrees.FileTree*
         """
         try:
             tree = self._lazy_output_filetree
         except AttributeError:  # pragma: no branch
-            output_branches = self._get_config("output_branches")
-            url_branches = ChainMap(
-                self._get_config("url_branches"),
-                output_branches,
-            )
-            tree = OutputFileTree(
-                self._class.output_branch,
-                self._get_config("output_filename"),
-                output_branches=output_branches,
-                url_branches=url_branches,
+            tree = FileTree(
+                self._get_config("output_branches"),
             )
             self._lazy_output_filetree = tree
         return tree
@@ -189,11 +162,54 @@ class ResourceFactory:
         except AttributeError:  # pragma: no branch
             domain = OutputFileDomain(
                 self._output_filetree,
+                self._class.output_branch,
+                self._get_config("output_filename"),
                 self._class.output_encoding,
                 self._class.output_newline,
             )
             self._lazy_output_file_domain = domain
         return domain
+
+    @property
+    def _url_filetree(self):
+        """
+        The URL file tree of the resource.
+
+        *doxhooks.filetrees.FileTree*
+        """
+        try:
+            tree = self._lazy_url_filetree
+        except AttributeError:  # pragma: no branch
+            tree = FileTree(
+                ChainMap(
+                    self._get_config("url_branches"),
+                    self._get_config("output_branches"),
+                ),
+            )
+            self._lazy_url_filetree = tree
+        return tree
+
+    @property
+    def _address(self):
+        """
+        The address (URL) field of the resource.
+
+        *doxhooks.resource_addresses.ResourceAddress*
+        """
+        try:
+            address = self._lazy_address
+        except AttributeError:  # pragma: no branch
+            address = ResourceAddress(
+                self._get_config("id"),
+                self._output_file_domain,
+                self._url_filetree,
+                self._class.url_rewrite,
+                self._class.url_root,
+                self._class.url_prefix,
+                self._get_config("urls"),
+            )
+            self._lazy_address = address
+        return address
 
     def _make_dependencies(self):
         """

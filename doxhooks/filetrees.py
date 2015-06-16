@@ -1,22 +1,14 @@
 """
-Directory trees that produce file paths.
+Trees with file-path branches.
 
-A `file tree`:term: produces file paths by joining a directory branch to
-a filename (`FileTree.path`). The file tree has a default filename, a
-default `branch`:term: and a collection of named branches. The default
-branch is overridden by starting the filename with the name of a branch,
-e.g. ``"<my_branch>my_file.src"``, ``"<my_branch>my_dir/my_file.src"``.
-Branches are chained by starting a branch with the name of another
-branch.
+A `file tree`:term: returns paths with the branch names replaced by
+branch paths. Branches are chained by starting a branch with the name of
+another branch.
 
 Exports
 -------
-InputFileTree
-    A directory tree that produces paths to input files.
-OutputFileTree
-    A directory tree that produces paths to output files.
 FileTree
-    A directory tree that produces file paths.
+    A tree with file-path branches.
 
 
 .. testsetup::
@@ -34,200 +26,112 @@ FileTree
 import os
 import re
 
-from doxhooks.errors import DoxhooksLookupError, DoxhooksValueError
+from doxhooks.errors import DoxhooksDataError, DoxhooksLookupError
 
 
 __all__ = [
     "FileTree",
-    "InputFileTree",
-    "OutputFileTree",
 ]
 
 
 class FileTree:
     """
-    A directory tree that produces file paths.
+    A tree with file-path branches.
 
     Class Interface
     ---------------
     path
-        Join a filename to a directory branch and return the path.
+        Substitute branch names with paths and return the computed path.
     """
 
-    _branches_name = "`branches`"
-
-    def __init__(self, default_branch, default_filename, branches):
+    def __init__(self, branches, *, name="`branches`"):
         """
-        Initialise the file tree with branches and a default path.
+        Initialise the file tree with branches.
 
         Parameters
         ----------
-        default_branch : str
-            The branch to use when the filename does not start with the
-            name of a branch.
-        default_filename : str
-            The filename to use when the caller does not provide a
-            filename.
         branches : dict
-            The names and paths of directories in the tree.
-
-        Attributes
-        ----------
-        default_filename : str
-            The argument of `default_filename`.
+            The names and paths of the branches in the tree.
+        name : str, optional
+            Keyword-only. A name for the branches. The name only appears
+            in error messages. Defaults to ``"`branches`"``.
         """
-        self._default_branch = default_branch
-        self.default_filename = default_filename
         self._branches = branches
+        self._name = name
 
-    _branch_notation = re.compile(
-        r"^<(?P<branch_name>\w+)>(?P<subpath>.*)")
+    _branch_notation = re.compile(r"^<(?P<branch_name>\w+)>(?P<twig>.*)")
 
     def _get_branch(self, match):
-        # Recursively look up branch name and return the branch value.
-        branch_name, subpath = match.group("branch_name", "subpath")
+        # Recursively look up a branch name and return the branch value.
+        branch_name, twig = match.group("branch_name", "twig")
         try:
             branch = self._branches[branch_name]
         except KeyError:
-            raise DoxhooksLookupError(
-                branch_name, self._branches, self._branches_name)
-        path = os.path.join(branch, subpath)
+            raise DoxhooksLookupError(branch_name, self._branches, self._name)
+        path = os.path.join(branch, twig)
         return self._branch_notation.sub(self._get_branch, path)
 
-    def path(self, filename=None, *, rewrite=None):
+    def path(self, branch, leaf=None, *, rewrite=None):
         r"""
-        Join a filename to a directory branch and return the path.
+        Substitute branch names with paths and return the computed path.
 
-        If the filename starts with a branch name, then the filename is
-        joined to the named branch. Otherwise the *default branch* of
-        this `FileTree` is used. Branches are chained by starting a
-        branch with the name of another branch.
+        Branches are chained by starting a branch with the name of
+        another branch.
 
         Parameters
         ----------
-        filename : str or None, optional
-            A filename to use instead of the *default filename* of this
-            `FileTree`. Defaults to ``None``.
+        branch : str
+            A path.
+        leaf : str or None, optional
+            An additional path. The paths `branch` and `leaf` will be
+            joined, unless `leaf` starts with a branch name, in which
+            case `branch` is ignored. (This is analogous to the
+            behaviour of `os.path.join` with absolute paths.)
         rewrite : optional
             Keyword-only. A value that will replace a substring ``"{}"``
-            in the filename. Defaults to ``None``, which denotes that
-            the filename will not be rewritten.
+            in the path. Defaults to ``None``, which denotes that the
+            path will not be rewritten.
 
         Returns
         -------
         str
-            The file path.
+            The computed path.
 
         Raises
         ------
         ~doxhooks.errors.DoxhooksLookupError
-            If a branch name cannot be found in the *branch dictionary*
-            of this `FileTree`.
-        ~doxhooks.errors.DoxhooksValueError
-            If `rewrite` is not ``None`` and the filename cannot be
+            If a named branch cannot be found among the *branches* of
+            this `FileTree`.
+        ~doxhooks.errors.DoxhooksDataError
+            If `rewrite` is not ``None`` and the path cannot be
             rewritten.
 
         Examples
         --------
-        >>> filetree = doxhooks.filetrees.FileTree(
-        ...     "img/png", "picture.png", {"svg": "img/svg"})
-        >>> filetree.path()
-        'img/png/picture.png'
-        >>> filetree.path("image{}.png", rewrite="_1")
-        'img/png/image_1.png'
-        >>> filetree.path("<svg>drawing.svg")
-        'img/svg/drawing.svg'
-        >>> filetree.path("<jpeg>photo.jpg")
-        Traceback (most recent call last):
-            ...
-        doxhooks.errors.DoxhooksLookupError: Cannot find 'jpeg' in `branches`.
+        >>> ft = doxhooks.filetrees.FileTree(
+        ...     {"src": "source", "html": "<src>html", "js": "<src>js"})
+        >>> ft.path("source/html/films")
+        'source/html/films'
+        >>> ft.path("<html>films")
+        'source/html/films'
+        >>> ft.path("<html>films", "heat.html")
+        'source/html/films/heat.html'
+        >>> ft.path("<html>films", "heat{}.html", rewrite="-1995")
+        'source/html/films/heat-1995.html'
+        >>> ft.path("<html>films", "<js>inline.js")
+        'source/js/inline.js'
         """
-        if filename is None:
-            target_filename = self.default_filename
+        if leaf and self._branch_notation.match(leaf):
+            path = self._branch_notation.sub(self._get_branch, leaf)
         else:
-            target_filename = filename
+            branch_path = self._branch_notation.sub(self._get_branch, branch)
+            path = os.path.join(branch_path, leaf) if leaf else branch_path
 
         if rewrite is not None:
             try:
-                target_filename = target_filename.format(rewrite)
-            except LookupError as error:
-                raise DoxhooksValueError(
-                    target_filename, "filename", "a rewritable filename") \
+                path = path.format(rewrite)
+            except (LookupError, ValueError) as error:
+                raise DoxhooksDataError("Cannot rewrite path:", path) \
                     from error
 
-        if self._branch_notation.match(target_filename):
-            path = target_filename
-        else:
-            branch_notation = self._branch_notation.match(self._default_branch)
-            if branch_notation and not branch_notation.group("subpath"):
-                path = self._default_branch + target_filename
-            else:
-                path = os.path.join(self._default_branch, target_filename)
-
-        return os.path.normpath(
-            self._branch_notation.sub(self._get_branch, path))
-
-
-class InputFileTree(FileTree):
-    """
-    A directory tree that produces paths to input files.
-
-    `InputFileTree` extends `FileTree`.
-    """
-
-    _branches_name = "`input_branches`"
-
-
-class OutputFileTree(FileTree):
-    """
-    A directory tree that produces paths to output files.
-
-    `OutputFileTree` extends `FileTree`.
-
-    Class Interface
-    ---------------
-    path
-        Extend `FileTree.path` by returning the path to an output file.
-    url_path
-        Extend `FileTree.path` by returning the file path in the URL.
-    """
-
-    def __init__(self, *args, output_branches, url_branches):
-        """
-        Initialise the file tree with branches and a default path.
-
-        The `OutputFileTree` constructor extends the `FileTree`
-        constructor by replacing the *branches* parameter with
-        `output_branches` and `url_branches`.
-
-        Parameters
-        ----------
-        output_branches : dict
-            The names and paths of the output directories.
-        url_branches : dict
-            The names and paths of directories in URLs.
-        """
-        super().__init__(*args, branches=None)
-        self._output_branches = output_branches
-        self._url_branches = url_branches
-
-    def path(self, *, rewrite=None):
-        # FIXME: args are different from super().path args.
-        """
-        Return the path to an output file.
-
-        Extends `FileTree.path`.
-        """
-        self._branches = self._output_branches
-        self._branches_name = "`output_branches`"
-        return super().path(rewrite=rewrite)
-
-    def url_path(self, *, rewrite=None):
-        """
-        Return the file path in the default URL.
-
-        Extends `FileTree.path`.
-        """
-        self._branches = self._url_branches
-        self._branches_name = "`url_branches`"
-        return super().path(rewrite=rewrite)
+        return os.path.normpath(path)

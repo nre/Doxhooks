@@ -44,26 +44,38 @@ class InputFileDomain:
         Open an input file in reading mode and return the file object.
     """
 
-    def __init__(self, filetree, encoding):
+    def __init__(self, filetree, branch, filename, encoding):
         """
-        Initialise the file domain with a file tree and an encoding.
+        Initialise the file domain with a file tree and file data.
 
         Parameters
         ----------
-        filetree : ~doxhooks.filetrees.InputFileTree
-            A directory tree that produces paths to the input files.
+        filetree : ~doxhooks.filetrees.FileTree
+            A tree with input-file-path branches.
+        branch : str
+            The path to the default directory for input files.
+        filename : str
+            The name of the default input file.
         encoding : str or None
             The encoding of the input files. The encoding of a binary
             file is ``None``.
 
         Attributes
         ----------
+        branch : str
+            The argument of `branch`.
+        filename : str
+            The argument of `filename`.
+        encoding : str or None
+            The argument of `encoding`.
         paths : set
             All the file paths that have been handled by `self.path` and
             `self.open`.
         """
         self._filetree = filetree
-        self._encoding = encoding
+        self.branch = branch
+        self.filename = filename
+        self.encoding = encoding
         self.paths = set()
 
     def path(self, filename=None, *, rewrite=None):
@@ -75,12 +87,12 @@ class InputFileDomain:
         Parameters
         ----------
         filename : str or None, optional
-            A filename to use instead of the default filename in the
-            *file tree* of this `InputFileDomain`. Defaults to ``None``.
+            A filename to use instead of `self.filename`. Defaults to
+            ``None``.
         rewrite : optional
             Keyword-only. A value that will replace a substring ``"{}"``
-            in the filename. Defaults to ``None``, which denotes that
-            the filename will not be rewritten.
+            in the path. Defaults to ``None``, which denotes that the
+            path will not be rewritten.
 
         Returns
         -------
@@ -92,7 +104,8 @@ class InputFileDomain:
         ~doxhooks.errors.DoxhooksDataError
             If the path cannot be determined.
         """
-        path = self._filetree.path(filename, rewrite=rewrite)
+        target = self.filename if filename is None else filename
+        path = self._filetree.path(self.branch, target, rewrite=rewrite)
         self.paths.add(path)
         return path
 
@@ -105,15 +118,14 @@ class InputFileDomain:
         Parameters
         ----------
         filename : str or None, optional
-            A filename to use instead of the default filename in the
-            *file tree* of this `InputFileDomain`. Defaults to ``None``.
+            A filename to use instead of `self.filename`. Defaults to
+            ``None``.
 
         Returns
         -------
         BinaryIO or TextIO
-            A binary file (if the *encoding* of this `InputFileDomain`
-            is ``None``) or a text file (if the encoding is not
-            ``None``).
+            A binary file (if `self.encoding` is ``None``) or a text
+            file (if `self.encoding` is not ``None``).
 
         Raises
         ------
@@ -122,7 +134,7 @@ class InputFileDomain:
         ~doxhooks.errors.DoxhooksFileError
             If the file cannot be opened.
         """
-        return fileio.open_input(self.path(filename), self._encoding)
+        return fileio.open_input(self.path(filename), self.encoding)
 
 
 class OutputFileDomain:
@@ -143,24 +155,41 @@ class OutputFileDomain:
         Mangle the output filename with the fingerprint of some strings.
     """
 
-    def __init__(self, filetree, encoding, newline):
+    def __init__(self, filetree, branch, filename, encoding, newline):
         """
-        Initialise the file domain with file tree, encoding and newline.
+        Initialise the file domain with a file tree and file data.
 
         Parameters
         ----------
-        filetree : ~doxhooks.filetrees.OutputFileTree
-            A directory tree that produces paths to the output files.
+        filetree : ~doxhooks.filetrees.FileTree
+            A tree with output-file-path branches.
+        branch : str
+            The path to the directory for output files.
+        filename : str
+            The name of the output file.
         encoding : str or None
             The encoding of the output files. The encoding of a binary
             file is ``None``.
         newline : str or None
             See the *newline* parameter of `open` or `io.TextIOWrapper`
             for details. Should be ``None`` for binary files.
+
+        Attributes
+        ----------
+        branch : str
+            The argument of `branch`.
+        filename : str
+            The argument of `filename`.
+        encoding : str or None
+            The argument of `encoding`.
+        newline : str or None
+            The argument of `newline`.
         """
         self._filetree = filetree
-        self._encoding = encoding
-        self._newline = newline
+        self.branch = branch
+        self.filename = self._initial_filename = filename
+        self.encoding = encoding
+        self.newline = newline
 
     def path(self, *, rewrite=None):
         """
@@ -170,8 +199,8 @@ class OutputFileDomain:
         ----------
         rewrite : optional
             Keyword-only. A value that will replace a substring ``"{}"``
-            in the filename. Defaults to ``None``, which denotes that
-            the filename will not be rewritten.
+            in the path. Defaults to ``None``, which denotes that the
+            path will not be rewritten.
 
         Returns
         -------
@@ -183,7 +212,7 @@ class OutputFileDomain:
         ~doxhooks.errors.DoxhooksDataError
             If the path cannot be determined.
         """
-        path = self._filetree.path(rewrite=rewrite)
+        path = self._filetree.path(self.branch, self.filename, rewrite=rewrite)
         console.log("Output:", path)
         return path
 
@@ -200,24 +229,14 @@ class OutputFileDomain:
         ----------
         rewrite : optional
             Keyword-only. A value that will replace a substring ``"{}"``
-            in the filename. Defaults to ``None``, which denotes that
-            the filename will not be rewritten.
+            in the path. Defaults to ``None``, which denotes that the
+            path will not be rewritten.
 
         Returns
         -------
         BinaryIO or TextIO
-            A binary file (if the *encoding* of this `OutputFileDomain`
-            is ``None``) or a text file (if the encoding is not
-            ``None``).
-
-        Raises
-        ------
-        ~doxhooks.errors.DoxhooksValueError
-            If the *encoding* of this `OutputFileDomain` is ``None`` and
-            the *newline* is not ``None``.
-        ~doxhooks.errors.DoxhooksFileSystemError
-            If the file cannot be opened.
-
+            A binary file (if `self.encoding` is ``None``) or a text
+            file (if `self.encoding` is not ``None``).
 
         Raises
         ------
@@ -227,7 +246,7 @@ class OutputFileDomain:
             If the file cannot be opened.
         """
         return fileio.open_output(
-            self.path(rewrite=rewrite), self._encoding, self._newline)
+            self.path(rewrite=rewrite), self.encoding, self.newline)
 
     def save(self, data, *, rewrite=None):
         """
@@ -245,8 +264,8 @@ class OutputFileDomain:
             is `str`.
         rewrite : optional
             Keyword-only. A value that will replace a substring ``"{}"``
-            in the filename. Defaults to ``None``, which denotes that
-            the filename will not be rewritten.
+            in the path. Defaults to ``None``, which denotes that the
+            path will not be rewritten.
 
         Raises
         ------
@@ -256,17 +275,7 @@ class OutputFileDomain:
             If the file cannot be saved.
         """
         fileio.save(
-            self.path(rewrite=rewrite), data, self._encoding, self._newline)
-
-    @property
-    def _initial_filename(self):
-        # Keep a copy of the initial output filename.
-        try:
-            filename = self._lazy_initial_filename
-        except AttributeError:
-            filename = self._filetree.default_filename
-            self._lazy_initial_filename = filename
-        return filename
+            self.path(rewrite=rewrite), data, self.encoding, self.newline)
 
     def fingerprint_files(self, path, *paths):
         r"""
@@ -289,7 +298,7 @@ class OutputFileDomain:
         ~doxhooks.errors.DoxhooksFileError
             If a file cannot be read.
         """
-        self._filetree.default_filename = fingerprint.filename_for_files(
+        self.filename = fingerprint.filename_for_files(
             self._initial_filename, path, *paths)
 
     def fingerprint_strings(self, string, *strings):
@@ -307,5 +316,5 @@ class OutputFileDomain:
         \*strings : str, optional
             More strings to be fingerprinted.
         """
-        self._filetree.default_filename = fingerprint.filename_for_strings(
-            self._initial_filename, string, *strings, encoding=self._encoding)
+        self.filename = fingerprint.filename_for_strings(
+            self._initial_filename, string, *strings, encoding=self.encoding)

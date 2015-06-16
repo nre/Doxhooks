@@ -7,36 +7,41 @@ from pytest import fail, mark
 from doxhooks_pytest import withraises
 
 
-class FakeOutputFileTree:
-    def __init__(self, output_path):
-        self._output_path = output_path
+class FakeOutputFileDomain:
+    filename = None
 
-    def url_path(self, *, rewrite):
-        return self._output_path
+    def __init__(self, branch):
+        self.branch = branch
+
+
+class FakeFileTree:
+    def path(self, branch, *args, **kwargs):
+        return branch
 
 
 class BaseTestResourceAddress:
     id = "test_id"
+    fake_filetree = FakeFileTree()
 
     prefix = ""
-    output_path = "test/default.dat"
+    path = "test/default.dat"
     root = None
-    default_url = "/" + output_path
+    default_url = "/" + path
     defined_url = "example.com/defined"
     predefined_url = "example.com/predefined"
 
     def given_the_url_field_of_a_resource(
-            self, *, prefix=None, output_path=None, root=None):
+            self, *, prefix=None, path=None, root=None):
         self.urls = {}
-        dummy_rewrite = None
         self.address = ResourceAddress(
             self.id,
-            self.urls,
-            FakeOutputFileTree(
-                self.output_path if output_path is None else output_path),
-            self.prefix if prefix is None else prefix,
+            FakeOutputFileDomain(
+                self.path if path is None else path),
+            self.fake_filetree,
+            "dummy_rewrite",
             self.root if root is None else root,
-            dummy_rewrite,
+            self.prefix if prefix is None else prefix,
+            self.urls,
         )
 
     given_the_uninitialised_url_field_of_a_resource = \
@@ -181,14 +186,13 @@ class TestPredefinedURL(BaseTestResourceAddress):
 
 class TestDefaultURL(BaseTestResourceAddress):
     @mark.parametrize(
-        "prefix, output_path, url", [
+        "prefix, path, url", [
             ("", "one/test.dat", "/one/test.dat"),
             ("example.com", "one/test.dat", "example.com/one/test.dat"),
         ])
     def test_the_default_url_starts_with_an_optional_domain_name(
-            self, prefix, output_path, url):
-        self.given_the_url_field_of_a_resource(
-            prefix=prefix, output_path=output_path)
+            self, prefix, path, url):
+        self.given_the_url_field_of_a_resource(prefix=prefix, path=path)
 
         self.when_computing_the_default_url()
 
@@ -196,19 +200,18 @@ class TestDefaultURL(BaseTestResourceAddress):
         assert self.url == url
 
     @mark.parametrize(
-        "output_path, server_root, url", [
+        "path, server_root, url", [
             ("/one/test.dat", None, "/one/test.dat"),
             ("one/test.dat", None, "/one/test.dat"),
-            (mark.skipif(os.sep != "\\", reason="tests backslash separator")
+            (mark.skipif(os.sep != "\\", reason="Windows backslash separator")
                 (("one\\test.dat", None, "/one/test.dat"))),
             ("one/test.dat", "", "/one/test.dat"),
             ("one/test.dat", os.curdir, "/one/test.dat"),
             ("one/test.dat", "one", "/test.dat"),
         ])
     def test_the_absolute_path_in_the_default_url_is_relative_to_a_server_root(
-            self, output_path, server_root, url):
-        self.given_the_url_field_of_a_resource(
-            output_path=output_path, root=server_root)
+            self, path, server_root, url):
+        self.given_the_url_field_of_a_resource(path=path, root=server_root)
 
         self.when_computing_the_default_url()
 
@@ -217,15 +220,13 @@ class TestDefaultURL(BaseTestResourceAddress):
         assert self.url == url
 
     @mark.parametrize(
-        "output_path, root", [
+        "path, root", [
             ("../test.dat", None),
             ("one/test.dat", "one/two"),
             ("test.dat", "one"),
         ])
-    def test_a_relative_path_in_the_default_url_is_an_error(
-            self, output_path, root):
-        self.given_the_url_field_of_a_resource(
-            output_path=output_path, root=root)
+    def test_a_relative_path_in_the_default_url_is_an_error(self, path, root):
+        self.given_the_url_field_of_a_resource(path=path, root=root)
 
         self.when_computing_the_default_url(raises=DoxhooksDataError)
 

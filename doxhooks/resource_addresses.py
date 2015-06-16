@@ -1,4 +1,3 @@
-# TODO: A DefaultURL class can be refactored out of ResourceAddress.
 """
 Address (URL) fields for information resources.
 
@@ -39,7 +38,8 @@ class ResourceAddress:
     """
 
     def __init__(
-            self, resource_id, urls, output_filetree, prefix, root, rewrite):
+            self, resource_id, output_file_domain, filetree, rewrite, root,
+            prefix, urls):
         """
         Initialise the address field with data about the resource.
 
@@ -47,34 +47,45 @@ class ResourceAddress:
         ----------
         resource_id : ~collections.Hashable
             The identity of the resource.
-        urls : dict
-            A dictionary of resource identities and URLs.
-        filetree : ~doxhooks.filetrees.OutputFileTree
-            The output-file tree of the resource.
-        prefix : str
-            The domain name (and optionally the scheme name and port
-            number) that the default URL starts with.
+        output_file_domain : ~doxhooks.file_domains.OutputFileDomain
+            The output-file domain of the resource.
+        filetree : ~doxhooks.filetrees.FileTree
+            A tree with URL-path branches.
+        rewrite
+            A value that replaces a substring ``"{}"`` in the path in
+            the default URL. ``None`` denotes that the path will not be
+            rewritten.
         root : str or None
             The path to a server root directory. The absolute path in
             the default URL derives from the output-file path relative
             to this path.
-        rewrite
-            A value that replaces a substring ``"{}"`` in the filename
-            in the default URL. ``None`` denotes that the filename will
-            not be rewritten.
+        prefix : str
+            The domain name (and optionally the scheme name and port
+            number) that the default URL starts with.
+        urls : dict
+            A dictionary of resource identities and URLs.
+
+        Attributes
+        ----------
+        urls : dict
+            The argument of `urls`.
         """
         self._resource_id = resource_id
-        self._urls = urls
-        self._filetree = output_filetree
-        self._prefix = prefix
-        self._root = root
+        self._output = output_file_domain
+        self._filetree = filetree
         self._rewrite = rewrite
+        self._root = root
+        self._prefix = prefix
+        self.urls = urls
 
     def _compute_default(self):
         # Compute and return the default, absolute URL.
-        path = self._filetree.url_path(rewrite=self._rewrite)
+        branch = self._output.branch
+        filename = self._output.filename
+        path = self._filetree.path(branch, filename, rewrite=self._rewrite)
         if self._root is not None:
-            path = os.path.normpath(os.path.relpath(path, self._root))
+            root = self._filetree.path(self._root)
+            path = os.path.normpath(os.path.relpath(path, root))
         if path.startswith(os.pardir):
             raise DoxhooksDataError(
                 "Resource {!r} URL path starts with {!r}: {!r}"
@@ -105,13 +116,12 @@ class ResourceAddress:
         URLs are returned in the following order of preference:
 
         1. A URL that was stored in the field by `self.define`.
-        2. A URL that is defined for this resource in the *dictionary of
-           URLs* of this `ResourceAddress`. A side effect of accessing
-           this URL is that it is stored in this field.
+        2. A URL that is defined for this resource in `self.urls`. A
+           side effect of accessing this URL is that it is stored in
+           this field.
         3. The default URL for this resource. The side effects of
-           accessing this URL are that it is added to the *dictionary of
-           URLs* of this `ResourceAddress` and that it is stored in this
-           field.
+           accessing this URL are that it is added to `self.urls` and
+           that it is stored in this field.
 
         Returns
         -------
@@ -127,19 +137,19 @@ class ResourceAddress:
             protected_url = self._url
         except AttributeError:
             try:
-                protected_url = self._urls[self._resource_id]
+                protected_url = self.urls[self._resource_id]
             except KeyError:
                 protected_url = self._compute_default()
-                self._urls[self._resource_id] = protected_url
+                self.urls[self._resource_id] = protected_url
             self._url = protected_url
         return protected_url
 
     def _update_dict(self, url):
         # Update the URL dictionary.
         try:
-            dict_url = self._urls[self._resource_id]
+            dict_url = self.urls[self._resource_id]
         except KeyError:
-            self._urls[self._resource_id] = url
+            self.urls[self._resource_id] = url
         else:
             if dict_url != url:
                 raise RuntimeError(
@@ -151,7 +161,7 @@ class ResourceAddress:
         Set the address (URL) of the resource.
 
         A side effect of defining the URL is that this URL is added to
-        the *dictionary of URLs* of this `ResourceAddress`.
+        `self.urls`.
 
         Parameters
         ----------
@@ -163,7 +173,7 @@ class ResourceAddress:
         RuntimeError
             If a different URL has already been defined by
             `self.define`, or accessed by `self.access` or defined in
-            the *dictionary of URLs* of this `ResourceAddress`.
+            `self.urls`.
         """
         try:
             protected_url = self._url

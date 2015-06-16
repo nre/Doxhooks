@@ -21,9 +21,9 @@ Glossary
     file tree
         Directories and files that are organised into a structure.
 
-        A *branch* is a directory path in that file tree.
+        A *branch* is a path within that file tree.
 
-        `Doxhooks`:term: file trees are instances of `~doxhooks.filetrees.BaseFileTree`.
+        `Doxhooks`:term: file trees are instances of `~doxhooks.filetrees.FileTree`.
 
     fingerprint
         A common dilemma in Web development is deciding how long to cache resources that are indirectly requested by the client. These resources are typically images, fonts, scripts and stylesheets. A solution is that the cache lifetime can be arbitrarily long if the URL of the resource changes whenever the content of the resource changes. One way to change the URL is to mangle the resource filename with a fingerprint of the file contents, e.g. ``myfile.css`` becomes ``myfile-c1285a47.css``.
