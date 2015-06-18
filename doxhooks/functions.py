@@ -91,13 +91,16 @@ def findvalue(object, name):
     try:
         return getattr(object_, name)
     except AttributeError:
-        try:
-            return getattr(object_, name + "_")
-        except AttributeError:
-            try:
-                return object_[name]
-            except (KeyError, TypeError):
-                raise DoxhooksLookupError(name, object_, "object")
+        pass
+    try:
+        return getattr(object_, name + "_")
+    except AttributeError:
+        pass
+    try:
+        return object_[name]
+    except (KeyError, TypeError):
+        pass
+    raise DoxhooksLookupError(name, object_, "object")
 
 
 def importattr(import_name):
