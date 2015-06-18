@@ -13,7 +13,7 @@ Mac and Windows users can `download Python <https://www.python.org/downloads/>`_
 
 .. note::
 
-    It is unnecessary and `probably a bad idea to uninstall Python 2.x <https://docs.python.org/2.7/faq/installed.html#can-i-delete-python>`_.
+    It is unnecessary and `probably a bad idea to uninstall Python 2 <https://docs.python.org/2.7/faq/installed.html#can-i-delete-python>`_.
 
 
 2. Install pip
@@ -25,6 +25,8 @@ pip is bundled with Python 3.4 (and newer versions). Install pip with the comman
 
 :Mac and \*nix: ``python3 -m ensurepip``
 :Windows: ``py -3 -m ensurepip``
+
+Some \*nix distributions remove the bundled pip to a separate package.
 
 pip is not bundled with Python 3.3. `Download the get-pip script <https://bootstrap.pypa.io/get-pip.py>`_ (`get-pip.py`:file:) then install pip with the command:
 
