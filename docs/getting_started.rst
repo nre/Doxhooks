@@ -9,11 +9,11 @@ Getting Started
 
 Doxhooks requires Python 3.3 (or a newer version).
 
-Mac and Windows users can `download Python <https://www.python.org/downloads/>`_ and install it. \*nix users can use their package manager.
-
 .. note::
 
     It is unnecessary and `probably a bad idea to uninstall Python 2 <https://docs.python.org/2.7/faq/installed.html#can-i-delete-python>`_.
+
+Mac and Windows users can `download Python <https://www.python.org/downloads/>`_ and install it. \*nix users can use their package manager.
 
 
 2. Install pip
@@ -45,7 +45,7 @@ Install Doxhooks with the command:
 4. Use Doxhooks
 ***************
 
-Copy and paste the files from one of the `Doxhooks examples <examples>`:doc:. Run the example script (`example.py`:file:) with the command:
+Copy and paste the files from one of the `Doxhooks examples <examples>`:doc:. Run the example script `example.py`:file: with the command:
 
 :Mac and \*nix: ``./example.py`` (or ``python3 example.py``)
 :Windows: ``example.py`` (or ``py example.py``)

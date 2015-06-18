@@ -8,7 +8,7 @@ Resources
 *********
 
 * Give names to files and directories, instead of hard-coding their paths.
-* Refer to URLs by the identity of their resources, instead of hard-coding the URLs.
+* Refer to URLs by the identity of the resources, instead of hard-coding the URLs.
 * Give a resource a default URL (based on its output path) or override the default.
 * `Mangle <fingerprint>`:term: a URL and output filename with a custom `fingerprint`:term: of the resource content.
 * Update one resource, or all resources, or all resources that depend on a given input file.
