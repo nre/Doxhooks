@@ -8,19 +8,19 @@ from doxhooks.resources import Resource
 # Make a list of the resources in my project:
 my_resource_configs = [
 
-    # The first resource is a copy of source/image.png. The copy will be
+    # The first resource is a copy of src/image.png. The copy will be
     # www/logo.png:
 
     _(  # NB: '_' is the name we gave to ResourceConfiguration.
         Resource,
-        input_filename="source/image.png",
+        input_filename="src/image.png",
         output_filename="www/logo.png",
     ),
 
-    # The second resource is a copy of source/robots.txt:
+    # The second resource is a copy of src/robots.txt:
     _(
         Resource,
-        input_filename="source/robots.txt",
+        input_filename="src/robots.txt",
         output_filename="www/robots.txt",
     ),
 ]
@@ -37,8 +37,8 @@ def main():
     Doxhooks(my_resource_configs).update_all()
     # Doxhooks will:
     # - Make the output directory 'www'.
-    # - Copy source/image.png to www/logo.png.
-    # - Copy source/robots.txt to www/robots.txt.
+    # - Copy src/image.png to www/logo.png.
+    # - Copy src/robots.txt to www/robots.txt.
 
 
 if __name__ == "__main__":

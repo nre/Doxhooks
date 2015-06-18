@@ -14,10 +14,10 @@ class MyHTMLContext(PreprocessorContext):
 
     # Define a filename variable that can be used in an 'insert'
     # directive:
-    body = "source/_body.html"
+    body = "src/_body.html"
 
     # In this context, the 'insert' directive '##insert body' is the
-    # same as '##insert source/_body.html'.
+    # same as '##insert src/_body.html'.
     #
     # The directives are highlighted in the example file _html.html
     # further down this page.
@@ -30,23 +30,23 @@ class MyHTMLResource(PreprocessedResource):
 my_resource_configs = [
     _(
         MyHTMLResource,
-        input_filename="source/_html.html",
+        input_filename="src/_html.html",
         output_filename="www/celinejulie.html",
         context_vars={
             "film_title": "Celine and Julie Go Boating",
 
             # Define a filename variable that can be used in an 'insert'
             # directive:
-            "main": "source/content/_celinejulie.html",
+            "main": "src/content/_celinejulie.html",
         },
     ),
     _(
         MyHTMLResource,
-        input_filename="source/_html.html",
+        input_filename="src/_html.html",
         output_filename="www/daywrath.html",
         context_vars={
             "film_title": "Day of Wrath",
-            "main": "source/content/_daywrath.html",
+            "main": "src/content/_daywrath.html",
         },
     ),
 ]

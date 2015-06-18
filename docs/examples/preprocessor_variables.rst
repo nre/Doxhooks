@@ -6,7 +6,7 @@ File tree
 *********
 
 * :ref:`preprocessor_variables_example_py`
-* source
+* src
 
   * :ref:`preprocessor_variables_film_html`
 
@@ -32,7 +32,7 @@ example.py
 _film.html
 ==========
 
-.. literalinclude:: /../examples/basics/preprocessor_variables/source/_film.html
+.. literalinclude:: /../examples/basics/preprocessor_variables/src/_film.html
     :language: html
 
 

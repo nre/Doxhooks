@@ -38,7 +38,7 @@ class MyHTMLResource(PreprocessedResource):
 my_resource_configs = [
     _(
         MyHTMLResource,
-        input_filename="source/_film.html",
+        input_filename="src/_film.html",
         output_filename="www/caligari.html",
 
         # Define the values of some variables in the context of this
@@ -50,7 +50,7 @@ my_resource_configs = [
     ),
     _(
         MyHTMLResource,
-        input_filename="source/_film.html",
+        input_filename="src/_film.html",
         output_filename="www/placesun.html",
 
         context_vars={
@@ -73,8 +73,8 @@ def main():
     Doxhooks(my_resource_configs).update_all()
     # Doxhooks will:
     # - Make the output directory 'www'.
-    # - Read source/_film.html and write www/caligari.html.
-    # - Read source/_film.html and write www/placesun.html.
+    # - Read src/_film.html and write www/caligari.html.
+    # - Read src/_film.html and write www/placesun.html.
 
 
 if __name__ == "__main__":

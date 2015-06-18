@@ -6,7 +6,7 @@ File tree
 *********
 
 * :ref:`copy_a_file_example_py`
-* source
+* src
 
   * image.png
   * robots.txt

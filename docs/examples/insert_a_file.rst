@@ -6,7 +6,7 @@ File tree
 *********
 
 * :ref:`insert_a_file_example_py`
-* source
+* src
 
   * :ref:`insert_a_file_html_html`
   * :ref:`insert_a_file_head_html`
@@ -39,7 +39,7 @@ example.py
 _html.html
 ==========
 
-.. literalinclude:: /../examples/basics/insert_a_file/source/_html.html
+.. literalinclude:: /../examples/basics/insert_a_file/src/_html.html
     :language: html
     :emphasize-lines: 6, 10
 
@@ -49,7 +49,7 @@ _html.html
 _head.html
 ==========
 
-.. literalinclude:: /../examples/basics/insert_a_file/source/_head.html
+.. literalinclude:: /../examples/basics/insert_a_file/src/_head.html
     :language: html
 
 
@@ -58,7 +58,7 @@ _head.html
 _body.html
 ==========
 
-.. literalinclude:: /../examples/basics/insert_a_file/source/_body.html
+.. literalinclude:: /../examples/basics/insert_a_file/src/_body.html
     :language: html
     :emphasize-lines: 2
 
@@ -68,7 +68,7 @@ _body.html
 _celinejulie.html
 =================
 
-.. literalinclude:: /../examples/basics/insert_a_file/source/content/_celinejulie.html
+.. literalinclude:: /../examples/basics/insert_a_file/src/content/_celinejulie.html
     :language: html
 
 
@@ -77,7 +77,7 @@ _celinejulie.html
 _daywrath.html
 ==============
 
-.. literalinclude:: /../examples/basics/insert_a_file/source/content/_daywrath.html
+.. literalinclude:: /../examples/basics/insert_a_file/src/content/_daywrath.html
     :language: html
 
 
