@@ -1,7 +1,10 @@
-from doxhooks.errors import DoxhooksDataError, DoxhooksTypeError
+from types import SimpleNamespace
+
+from doxhooks.errors import (
+    DoxhooksDataError, DoxhooksLookupError, DoxhooksTypeError)
 from doxhooks.preprocessor_contexts import (
-    BasePreprocessorContext, PreprocessorContext,
-    lowercase_booleans, startcase_booleans)
+    BasePreprocessorContext, PreprocessorContext, lowercase_booleans,
+    startcase_booleans)
 from pytest import mark
 
 from doxhooks_pytest import withraises
@@ -19,6 +22,7 @@ class BaseTestBasePreprocessorContext:
         variables[self.name] = value
         self.given_a_preprocessor_context(**variables)
 
+    @withraises
     def when_getting_the_value_of_a_token(self, token):
         self.got_value = self.context.get(token)
 
@@ -86,12 +90,9 @@ class TestMemberOperator(BaseTestBasePreprocessorContext):
     class Context(BasePreprocessorContext):
         pass
 
-    class Example:
-        pass
-
-    Context.one = Example()
+    Context.one = SimpleNamespace()
     Context.one.name = value
-    Context.one.two = Example()
+    Context.one.two = SimpleNamespace()
     Context.one.two.name = value
 
     @mark.parametrize("token", ["one.name", "one.two.name"])
@@ -102,6 +103,21 @@ class TestMemberOperator(BaseTestBasePreprocessorContext):
         self.when_getting_the_value_of_a_token(token)
 
         self.then_a_string_representation_of_that_value_is_returned(self.value)
+
+    @mark.parametrize(
+        "token, description", [
+            ("x", "preprocessor context"),
+            ("one.x", "`one`"),
+            ("one.two.x", "`one.two`"),
+        ])
+    def test_getting_the_value_of_an_undefined_identifier_is_an_error(
+            self, token, description):
+        self.given_a_preprocessor_context()
+
+        self.when_getting_the_value_of_a_token(
+            token, raises=DoxhooksLookupError)
+
+        assert self.error.description == description
 
 
 class TestInterpret(BaseTestBasePreprocessorContext):

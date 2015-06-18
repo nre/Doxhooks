@@ -81,12 +81,16 @@ class BasePreprocessorContext:
     def _get_token_value(self, object_token):
         # Apply the 'member' operator ('.') within a token.
         value = self
-        for identifier in object_token.split("."):
+        identifiers = object_token.split(".")
+        for i, identifier in enumerate(identifiers):
             try:
                 value = findvalue(value, identifier)
             except DoxhooksLookupError as error:
-                # FIXME: Provide more useful info than repr.
-                error.description = repr(value)
+                if i == 0:
+                    description = "preprocessor context"
+                else:
+                    description = "`{}`".format(".".join(identifiers[:i]))
+                error.description = description
                 raise
         return value
 
@@ -137,7 +141,7 @@ class BasePreprocessorContext:
         try:
             return findvalue(self, identifier)
         except DoxhooksLookupError as error:
-            error.description = "the preprocessor context"
+            error.description = "preprocessor context"
             raise
 
     def interpret(self, keyword_token, *tokens, preprocessor=None):
