@@ -1,6 +1,11 @@
 Insert a File
 #############
 
+How to:
+
+* Insert the contents of an input file into another input file.
+* Reference a preprocessor variable in an ``insert`` directive.
+
 
 File tree
 *********
@@ -31,7 +36,7 @@ example.py
 ==========
 
 .. literalinclude:: /../examples/basics/insert_a_file/example.py
-    :emphasize-lines: 15-23, 38-40
+    :emphasize-lines: 15-25, 40-42
 
 
 .. _insert_a_file_html_html:
@@ -41,7 +46,7 @@ _html.html
 
 .. literalinclude:: /../examples/basics/insert_a_file/src/_html.html
     :language: html
-    :emphasize-lines: 6, 10
+    :emphasize-lines: 6, 10-11
 
 
 .. _insert_a_file_head_html:

@@ -1,6 +1,13 @@
 Copy a File
 ###########
 
+How to:
+
+* Copy a file (a text file that won't be preprocessed, or a binary file).
+* Rename a copied file.
+* Use the safeguard against overwriting input files (``add_output_roots``).
+* Update all resources.
+
 
 File tree
 *********

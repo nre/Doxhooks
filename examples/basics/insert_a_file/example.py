@@ -15,12 +15,14 @@ class MyHTMLContext(PreprocessorContext):
     # Define a filename variable that can be used in an 'insert'
     # directive:
     body = "src/_body.html"
-
     # In this context, the 'insert' directive '##insert body' is the
     # same as '##insert src/_body.html'.
-    #
-    # The directives are highlighted in the example file _html.html
-    # further down this page.
+
+    # Define a filename variable that is silently ignored by an 'insert'
+    # directive:
+    footer = None
+
+    # These directives are in _html.html.
 
 
 class MyHTMLResource(PreprocessedResource):

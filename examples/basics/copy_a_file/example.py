@@ -27,8 +27,8 @@ my_resource_configs = [
 
 
 def main():
-    # Tell Doxhooks that it is ok to write (and overwrite) files in the
-    # directory 'www' (and its subdirectories) but nowhere else:
+    # Tell Doxhooks that it is safe to write (and overwrite) files in
+    # the directory 'www' (and its subdirectories) but nowhere else:
     add_output_roots("www")
     # (This is a safeguard against accidentally overwriting the input
     # files because of a typo or blunder.)
