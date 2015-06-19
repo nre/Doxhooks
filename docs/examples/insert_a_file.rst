@@ -3,7 +3,7 @@ Insert a File
 
 How to:
 
-* Insert the contents of an input file into another input file.
+* Insert a file in another file.
 * Reference a preprocessor variable in an ``insert`` directive.
 
 

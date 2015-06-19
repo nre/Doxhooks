@@ -1,7 +1,7 @@
 Getting Started
 ###############
 
-`Please report any problems <https://github.com/nre/doxhooks/issues>`_ you have installing Doxhooks.
+`Please report any problems <https://github.com/nre/doxhooks/issues>`_ you have installing or using Doxhooks.
 
 
 1. Install Python
@@ -28,7 +28,7 @@ pip is bundled with Python 3.4 (and newer versions). Install pip with the comman
 
 Some \*nix distributions remove the bundled pip to a separate package.
 
-pip is not bundled with Python 3.3. `Download the get-pip script <https://bootstrap.pypa.io/get-pip.py>`_ (`get-pip.py`:file:) then install pip with the command:
+pip is not bundled with Python 3.3. `Download the get-pip script <https://bootstrap.pypa.io/get-pip.py>`_ `get-pip.py`:file: then install pip with the command:
 
 :Mac and \*nix: ``python3 get-pip.py``
 :Windows: ``py -3 get-pip.py``
@@ -49,3 +49,5 @@ Copy and paste the files from one of the `Doxhooks examples <examples>`:doc:. Ru
 
 :Mac and \*nix: ``./example.py`` (or ``python3 example.py``)
 :Windows: ``example.py`` (or ``py example.py``)
+
+Then edit and expand upon ``example.py`` to fit your project.

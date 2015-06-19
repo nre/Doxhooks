@@ -3,10 +3,10 @@ Preprocessor Variables
 
 How to:
 
-* Define preprocessor variables that are common to more than one resource.
-* Define preprocessor variables that are specific to one resource.
+* Define preprocessor variables that are common to related resources.
+* Define preprocessor variables that are specific to a resource.
 * Define a preprocessor variable that depends on other preprocessor variables.
-* Reference a preprocessor variable in an input file.
+* Reference a preprocessor variable in a file.
 
 
 File tree
