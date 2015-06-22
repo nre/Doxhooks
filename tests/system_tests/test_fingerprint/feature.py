@@ -25,12 +25,12 @@ class FingerprintedPreprocessedResource(PreprocessedResource):
 resource_configs = [
     _(
         FingerprintedResource,
-        input_filename="input/_fingerprint.txt",
-        output_filename="output/resource.txt",
+        input_filename="input/image.png",
+        output_filename="output/resource.png",
     ),
     _(
         FingerprintedPreprocessedResource,
-        input_filename="input/_fingerprint.txt",
+        input_filename="input/_text.txt",
         output_filename="output/preprocessed.txt",
     ),
 ]
