@@ -21,7 +21,7 @@ Preprocessors
 
 * Create customised `preprocessors <preprocessor>`:term: by extending and overriding other preprocessors, including the built-in general-purpose lexical preprocessor.
 * Use different types of preprocessors for different types of resources in the same project.
-* Customise the delimiters of the `preprocessor directives <preprocessor directive>`:term: and `variables <preprocessor node>`:term:.
+* `Customise the delimiters <examples/customise_the_preprocessor_delimiters>`:doc: of the preprocessor `directives <preprocessor directive>`:term: and `variables <preprocessor node>`:term:.
 * Apply character encodings and newline conventions to the output files.
 * Replace HTML character references with Unicode characters, other character references, etc.
 * See a preprocessor 'stack trace' when an error occurs in a preprocessor directive or variable.

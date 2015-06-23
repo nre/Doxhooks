@@ -8,3 +8,4 @@ Basics
     preprocessor_variables
     insert_a_file
     replace_html_character_references
+    customise_the_preprocessor_delimiters
