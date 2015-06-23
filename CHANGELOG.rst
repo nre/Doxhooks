@@ -4,6 +4,20 @@ Change Log
 Release updates are available via `Atom feed <https://github.com/nre/doxhooks/releases.atom>`_ and `Twitter <https://twitter.com/doxhooks>`_.
 
 
+0.4.0
+*****
+
+*2015-06-23*
+
+Breaking changes:
+
+* Optional whitespace between the opening delimiter and the keyword of a preprocessor directive is no longer the default. This behaviour can be restored, e.g.::
+
+    @directive_delimiter("##[ \t]*")
+    class MyPreprocessor(Preprocessor):
+        pass
+
+
 0.3.0
 *****
 
