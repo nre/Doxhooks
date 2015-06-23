@@ -1,7 +1,7 @@
 Features
 ########
 
-Doxhooks lets you abstract away the content and maintenance of files in your project. Doxhooks has three main classes of abstractions: `Resources <resource>`:term: (files), `preprocessors <preprocessor>`:term: and preprocessor `mini-languages <mini-language>`:term:.
+Doxhooks lets you abstract away the content and maintenance of files in your project. Doxhooks has three main classes of abstractions: `Resources <information resource>`:term: (files), `preprocessors <preprocessor>`:term: and preprocessor `mini-languages <mini-language>`:term:.
 
 
 Resources
@@ -23,9 +23,9 @@ Preprocessors
 * Use different types of preprocessors for different types of resources in the same project.
 * `Customise the delimiters <examples/customise_the_preprocessor_delimiters>`:doc: of the preprocessor `directives <preprocessor directive>`:term: and `variables <preprocessor node>`:term:.
 * Apply character encodings and newline conventions to the output files.
-* Replace HTML character references with Unicode characters, other character references, etc.
+* `Replace HTML character references <examples/replace_html_character_references>`:doc: with Unicode characters, other character references, etc.
 * See a preprocessor 'stack trace' when an error occurs in a preprocessor directive or variable.
-* Evaluate preprocessor variables `recursively and late <preprocessor node>`:term:.
+* `Evaluate preprocessor variables <examples/preprocessor_variables>`:doc: recursively and late.
 * Mix and match preprocessors with preprocessor mini-languages.
 
 
