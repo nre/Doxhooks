@@ -37,9 +37,9 @@ class MyHTMLPreprocessor(HTMLPreprocessor):
 
         # Replace character references with characters:
         "aacute": "á",
-        "eacute": "é",
+        # "eacute": "é",
         "iacute": "í",
-        # "oacute": "ó",
+        "oacute": "ó",
         "uacute": "ú",
     }
 
