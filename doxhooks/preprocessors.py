@@ -57,7 +57,7 @@ def _compile_match_directive(opening_delimiter):
     # whitespace is not allowed inside a node.
     directive_pattern = "".join((
         r"(?P<indentation>[ \t]*)", opening_delimiter,
-        r"[ \t]*(?P<keyword>\w+)(?:[ \t]+(?P<block>.+))?[ \t]*\n"))
+        r"(?P<keyword>\w+)(?:[ \t]+(?P<block>.+))?[ \t]*\n"))
 
     # fullmatch is new in Python 3.4.
     # return re.compile(directive_pattern).fullmatch

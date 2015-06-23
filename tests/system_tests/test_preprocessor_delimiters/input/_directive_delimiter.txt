@@ -1,2 +1,1 @@
 __open_directive__write "Can customise directive opening delimiter."
-__open_directive__ write "Can customise directive opening delimiter."

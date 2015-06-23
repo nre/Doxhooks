@@ -1,2 +1,1 @@
 Can customise directive opening delimiter.
-Can customise directive opening delimiter.
