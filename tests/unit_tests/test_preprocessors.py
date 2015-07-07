@@ -23,12 +23,10 @@ class FakeOutputFile:
 
 class BaseTestPreprocessors:
     filename = "test_filename.src"
-    output_file = None
 
-    def given_a_preprocessor(self):
-        dummy_context = None
+    def given_a_preprocessor(self, *, context=None, output_file=None):
         self.input = FakeInputFileDomain()
-        self.prepro = Preprocessor(dummy_context, self.input, self.output_file)
+        self.prepro = Preprocessor(context, self.input, output_file)
 
     def _insert_file(self, filename, *, idempotent=False):
         self.prepro.insert_file(filename, idempotent=idempotent)
@@ -83,12 +81,12 @@ class TestInputFiles(BaseTestPreprocessors):
 
 class TestLines(BaseTestPreprocessors):
     def test_a_string_of_lines_is_split_into_lines_and_not_characters(self):
-        self.output_file = FakeOutputFile()
-        self.given_a_preprocessor()
+        output_file = FakeOutputFile()
+        self.given_a_preprocessor(output_file=output_file)
 
         # when the preprocessor is passed a string instead of an
         # iterable of strings
         self.prepro.insert_lines("line 1\nline 2\n")
 
         # then the string is split into lines, not characters.
-        assert self.output_file.lines == ["line 1\n", "line 2\n"]
+        assert output_file.lines == ["line 1\n", "line 2\n"]
