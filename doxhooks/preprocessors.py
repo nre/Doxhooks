@@ -197,6 +197,8 @@ class Preprocessor:
             elif output_line:
                 self._output.write(indentation + output_line)
 
+        self._indentation = indentation
+
     def insert_file(self, filename, *, idempotent=False):
         """
         Push the contents of a file onto the preprocessor stack.

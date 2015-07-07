@@ -90,3 +90,15 @@ class TestLines(BaseTestPreprocessors):
 
         # then the string is split into lines, not characters.
         assert output_file.lines == ["line 1\n", "line 2\n"]
+
+    def test_directive_indentation_does_not_leak_into_a_new_stack(self):
+        output_file = FakeOutputFile()
+        self.given_a_preprocessor(context=mock.Mock(), output_file=output_file)
+
+        # when the preprocessor stack is started more than once
+        self.prepro.insert_lines(["    ##indented_directive\n"])
+        self.prepro.insert_lines(["No indent.\n"])
+
+        # then the directive indentation from a previous stack does not
+        # leak into the new stack.
+        assert output_file.lines == ["No indent.\n"]
