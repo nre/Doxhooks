@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import io
-
 from doxhooks.main import Doxhooks, add_output_roots
 from doxhooks.resource_configs import ResourceConfiguration as _
 from doxhooks.resources import PreprocessedResource, Resource
@@ -14,11 +12,7 @@ class FingerprintedResource(Resource):
 
 class FingerprintedPreprocessedResource(PreprocessedResource):
     def _write(self):
-        with io.StringIO() as output:
-            preprocessor = self._preprocessor_factory.make(output)
-            preprocessor.insert_file(self._input.filename, idempotent=True)
-            content = output.getvalue()
-
+        content = self._preprocess()
         self._output.fingerprint_strings(content)
         self._output.save(content)
 
