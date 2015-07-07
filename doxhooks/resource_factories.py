@@ -283,7 +283,6 @@ class PreprocessedResourceFactory(ResourceFactory):
                 self._class.Context,
                 self._get_config("context_vars"),
                 self._input_file_domain,
-                self._get_config("input_filename"),
             )
             self._lazy_preprocessor_factory = factory
         return factory

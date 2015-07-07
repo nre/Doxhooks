@@ -3,8 +3,7 @@ General-purpose and HTML lexical preprocessors.
 
 The `preprocessors <preprocessor>`:term: accept lines of text
 (`Preprocessor.insert_lines`) and files (`Preprocessor.insert_file`). A
-preprocessor starts by reading the root input file
-(`Preprocessor.start`), and remembers all the input files that it opens
+preprocessor remembers all the input files that it opens
 (`Preprocessor.input_files`).
 
 Preprocessor `directives <preprocessor directive>`:term: and variables
@@ -97,17 +96,13 @@ class Preprocessor:
 
     Class Interface
     ---------------
-    start
-        Preprocess the root input file.
     insert_file
         Push the contents of a file onto the preprocessor stack.
     insert_lines
         Push some lines of text onto the preprocessor stack.
     """
 
-    def __init__(
-            self, context, input_file_domain, root_input_filename,
-            output_file):
+    def __init__(self, context, input_file_domain, output_file):
         """
         Initialise the preprocessor with a context and files.
 
@@ -118,8 +113,6 @@ class Preprocessor:
             directives and variables in the input files.
         input_file_domain : ~doxhooks.file_domains.InputFileDomain
             The input-file domain.
-        root_input_filename : str
-            The name of the file that is opened by `Preprocessor.start`.
         output_file : TextIO
             An open file object that the preprocessor writes its output
             to.
@@ -131,7 +124,6 @@ class Preprocessor:
         """
         self._context = context
         self._input = input_file_domain
-        self._root_input_filename = root_input_filename
         self._output = output_file
 
         self._indentation = ""
@@ -240,21 +232,6 @@ class Preprocessor:
         self.input_files.add(filename)
         with self._input.open(filename) as lines:
             self.insert_lines(lines, filename)
-
-    def start(self):
-        """
-        Preprocess the root input file.
-
-        This method is idempotent, so it has no effect if the *root
-        input file* of this `Preprocessor` has already been
-        preprocessed.
-
-        Raises
-        ------
-        ~doxhooks.errors.DoxhooksFileError
-            If the file cannot be opened.
-        """
-        self.insert_file(self._root_input_filename, idempotent=True)
 
 
 class HTMLPreprocessor(Preprocessor):

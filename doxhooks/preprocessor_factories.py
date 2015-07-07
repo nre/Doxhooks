@@ -25,7 +25,7 @@ class PreprocessorFactory:
 
     def __init__(
             self, preprocessor_class, preprocessor_context_class, context_vars,
-            input_file_domain, root_input_file):
+            input_file_domain):
         """
         Initialise the factory with preprocessor prerequisites.
 
@@ -53,15 +53,11 @@ class PreprocessorFactory:
             when calling `PreprocessorFactory.make`.
         input_file_domain : ~doxhooks.file_domains.InputFileDomain
             The input-file domain.
-        root_input_file : str
-            The name of the file that is opened by
-            `doxhooks.preprocessors.Preprocessor.start`.
         """
         self._preprocessor_class = preprocessor_class
         self._preprocessor_context_class = preprocessor_context_class
         self._context_vars = context_vars
         self._input_file_domain = input_file_domain
-        self._root_input_file = root_input_file
 
     def make(self, output_file, **context_vars):
         r"""
@@ -90,4 +86,4 @@ class PreprocessorFactory:
 
         return self._preprocessor_class(
             self._preprocessor_context_class(**variables),
-            self._input_file_domain, self._root_input_file, output_file)
+            self._input_file_domain, output_file)

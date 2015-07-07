@@ -15,7 +15,8 @@ class FingerprintedResource(Resource):
 class FingerprintedPreprocessedResource(PreprocessedResource):
     def _write(self):
         with io.StringIO() as output:
-            self._preprocessor_factory.make(output).start()
+            preprocessor = self._preprocessor_factory.make(output)
+            preprocessor.insert_file(self._input.filename, idempotent=True)
             content = output.getvalue()
 
         self._output.fingerprint_strings(content)

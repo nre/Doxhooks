@@ -435,4 +435,4 @@ class PreprocessedResource(Resource):
         """
         with self._output.open() as output:
             preprocessor = self._preprocessor_factory.make(output)
-            preprocessor.start()
+            preprocessor.insert_file(self._input.filename, idempotent=True)

@@ -22,15 +22,13 @@ class FakeOutputFile:
 
 
 class BaseTestPreprocessors:
-    root_filename = "test_root.src"
     filename = "test_filename.src"
     output_file = None
 
     def given_a_preprocessor(self):
         dummy_context = None
         self.input = FakeInputFileDomain()
-        self.prepro = Preprocessor(
-            dummy_context, self.input, self.root_filename, self.output_file)
+        self.prepro = Preprocessor(dummy_context, self.input, self.output_file)
 
     def _insert_file(self, filename, *, idempotent=False):
         self.prepro.insert_file(filename, idempotent=idempotent)
@@ -81,18 +79,6 @@ class TestInputFiles(BaseTestPreprocessors):
 
         # then that file is opened again.
         assert self.input.open.called
-
-    def test_starting_the_preprocessor_is_idempotent(self):
-        self.given_a_preprocessor()
-        # that has started,
-        self.prepro.start()
-        self.input.open.reset_mock()
-
-        # when starting that preprocessor again
-        self.prepro.start()
-
-        # then the root input file is not opened again.
-        assert not self.input.open.called
 
 
 class TestLines(BaseTestPreprocessors):
