@@ -83,7 +83,8 @@ class OrderedDictFromClass(type):
         ~collections.OrderedDict
             The ordered dictionary.
         """
-        for key in ordered_dict:
-            if key.startswith("_"):
-                del ordered_dict[key]
+        private_keys = [key for key in ordered_dict if key.startswith("_")]
+        for private_key in private_keys:
+            del ordered_dict[private_key]
+
         return ordered_dict
