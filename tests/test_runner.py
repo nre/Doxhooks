@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from functools import partial
 
 import pytest
-from coverage import coverage
+from coverage import Coverage
 
 
 DIST_NAME = "doxhooks"
@@ -137,7 +137,7 @@ def coverage_kwargs(pytest_args):
 
 
 def with_coverage(f, source, *, report=True, data=False):
-    cov = coverage(source=[source])
+    cov = Coverage(source=[source])
     cov.start()
     try:
         exit_code = f()

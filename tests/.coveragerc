@@ -11,6 +11,5 @@ exclude_lines =
     raise NotImplementedError
 
 [html]
-ignore_errors = False
 title = Doxhooks coverage
 directory = __htmlcov__
