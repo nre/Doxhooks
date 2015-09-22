@@ -3,5 +3,6 @@
 /Doxhooks.egg-info/
 __pycache__/
 
+.cache
 __htmlcov__/
 __htmldocs__/
