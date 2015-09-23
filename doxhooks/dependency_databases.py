@@ -122,23 +122,24 @@ class DependencyDatabase:
         features : Iterable[Hashable]
             The features of the product.
         """
+        updated_features = set(features)
         products_features = self._products_features
 
         try:
             previous_features = products_features[product]
         except KeyError:
-            if features:
-                products_features[product] = set(features)
-                self._add_product(product, features)
+            if updated_features:
+                products_features[product] = updated_features
+                self._add_product(product, updated_features)
             return
 
-        if features:
-            products_features[product] = set(features)
+        if updated_features:
+            products_features[product] = updated_features
         else:
             del products_features[product]
 
-        added_features = features.difference(previous_features)
-        removed_features = previous_features.difference(features)
+        added_features = updated_features.difference(previous_features)
+        removed_features = previous_features.difference(updated_features)
 
         if added_features:
             console.log("Added dependencies:", ", ".join(added_features))
