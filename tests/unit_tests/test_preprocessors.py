@@ -12,6 +12,9 @@ class FakeInputFileDomain:
     def _open_fake_file(self, *args):
         return io.StringIO()
 
+    def path(self, filename):
+        return filename
+
 
 class FakeOutputFile:
     def __init__(self):
@@ -50,7 +53,7 @@ class TestInputFiles(BaseTestPreprocessors):
         self.when_inserting_an_input_file(self.filename)
 
         # then the filename is remembered.
-        assert self.filename in self.prepro.input_files
+        assert self.filename in self.prepro.input_paths
 
     @mark.parametrize("falsey_filename", [None, ""])
     def test_a_preprocessor_does_not_remember_a_placeholder_filename(
@@ -60,7 +63,7 @@ class TestInputFiles(BaseTestPreprocessors):
         self.when_inserting_an_input_file(falsey_filename)
 
         # then the filename is not remembered.
-        assert falsey_filename not in self.prepro.input_files
+        assert falsey_filename not in self.prepro.input_paths
 
     def test_idempotent_file_insertion_does_not_reopen_a_remembered_file(self):
         self.given_a_preprocessor_that_has_inserted_a_file()

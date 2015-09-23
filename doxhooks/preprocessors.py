@@ -4,7 +4,7 @@ General-purpose and HTML lexical preprocessors.
 The `preprocessors <preprocessor>`:term: accept lines of text
 (`Preprocessor.insert_lines`) and files (`Preprocessor.insert_file`). A
 preprocessor remembers all the input files that it opens
-(`Preprocessor.input_files`).
+(`Preprocessor.input_paths`).
 
 Preprocessor `directives <preprocessor directive>`:term: and variables
 (also known as `nodes <preprocessor node>`:term:) are distinguished from
@@ -119,15 +119,15 @@ class Preprocessor:
 
         Attributes
         ----------
-        input_files : set
-            The filename of each input file that has been preprocessed.
+        input_paths : set
+            The path to each input file that has been preprocessed.
         """
         self._context = context
         self._input = input_file_domain
         self._output = output_file
 
         self._indentation = ""
-        self.input_files = set()
+        self.input_paths = set()
 
     _match_directive = _compile_match_directive("##")
 
@@ -203,8 +203,8 @@ class Preprocessor:
         """
         Push the contents of a file onto the preprocessor stack.
 
-        The filename is added to the set of *input files* opened by this
-        `Preprocessor`.
+        The file path is added to the set of *input paths* opened by
+        this `Preprocessor`.
 
         Parameters
         ----------
@@ -223,15 +223,12 @@ class Preprocessor:
         if not filename:
             return
 
-        if idempotent and filename in self.input_files:
+        path = self._input.path(filename)
+
+        if idempotent and path in self.input_paths:
             return
+        self.input_paths.add(path)
 
-        # TODO: self.input_files.add(self._input.path(filename)) ?
-        # Because the paths are unique (ignoring symbolic links) whereas
-        # filenames can refer to the same file (depending on their
-        # branches).
-
-        self.input_files.add(filename)
         with self._input.open(filename) as lines:
             self.insert_lines(lines, filename)
 
