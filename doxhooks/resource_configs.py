@@ -65,8 +65,8 @@ class ResourceConfiguration(dict):
         str
             A representation of the resource configuration.
         """
-        return "<{} object resource_class=`{}` {!r}>".format(
-            type(self).__name__, self._resource_class, dict(self))
+        return "<{} object resource_class=`{}` {}>".format(
+            type(self).__name__, self._resource_class, super().__repr__())
 
     def make(self, **kwargs):
         r"""
