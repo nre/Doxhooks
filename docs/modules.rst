@@ -23,3 +23,4 @@ Modules
     modules/resource_environments
     modules/resource_factories
     modules/resources
+    modules/url_mappings
