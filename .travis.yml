@@ -5,7 +5,8 @@ python:
     - 3.5
 install:
     - pip install .
-    - pip install coverage==4.0.*
+    - pip install pytest==2.8.0
+    - pip install coverage==4.0.0
     - pip install coveralls
 script:
     - python3 tests/test_runner.py --data
