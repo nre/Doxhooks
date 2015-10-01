@@ -16,7 +16,7 @@ from doxhooks.errors import DoxhooksLookupError
 from doxhooks.file_domains import InputFileDomain, OutputFileDomain
 from doxhooks.filetrees import FileTree
 from doxhooks.preprocessor_factories import PreprocessorFactory
-from doxhooks.resource_addresses import ResourceAddress
+from doxhooks.server_configs import ServerConfiguration
 
 
 __all__ = [
@@ -50,8 +50,8 @@ class ResourceFactory:
         Return a new output-file domain for the resource.
     _make_url_filetree
         Return a new URL file tree for the resource.
-    _make_address
-        Return a new address (URL) field for the resource.
+    _make_server_config
+        Return a new server configuration for the resource.
     """
 
     def __init__(self, resource_class, **kwargs):
@@ -200,23 +200,21 @@ class ResourceFactory:
             name="`ChainMap(url_branches, output_branches)`",
         )
 
-    def _make_address(self):
+    def _make_server_config(self):
         """
-        Return a new address (URL) field for the resource.
+        Return a new server configuration for the resource.
 
         Returns
         -------
-        ~doxhooks.resource_addresses.ResourceAddress
-            The address (URL) field.
+        ~doxhooks.server_configs.ServerConfiguration
+            The server configuration.
         """
-        return ResourceAddress(
-            self._get("id"),
-            self._get("output_file_domain"),
+        return ServerConfiguration(
             self._get("url_filetree"),
-            self._class.url_rewrite,
-            self._class.url_root,
-            self._class.url_prefix,
-            self._get("urls"),
+            self._class.server_protocol,
+            self._class.server_hostname,
+            self._class.server_root,
+            self._class.server_rewrite,
         )
 
     def _make_dependencies(self):
@@ -237,9 +235,10 @@ class ResourceFactory:
         del dependencies["output_filename"]
 
         dependencies.update(
-            address=self._get("address"),
             input_file_domain=self._get("input_file_domain"),
             output_file_domain=self._get("output_file_domain"),
+            server_config=self._get("server_config"),
+            urls=self._get("urls"),
         )
         return dependencies
 

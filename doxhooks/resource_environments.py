@@ -19,8 +19,7 @@ ResourceEnvironment
 import os
 
 import doxhooks.console as console
-import doxhooks.dataio as dataio
-from doxhooks.errors import DoxhooksDataFileError, DoxhooksLookupError
+from doxhooks.errors import DoxhooksLookupError
 
 
 __all__ = [
@@ -214,11 +213,8 @@ class ResourceEnvironment:
         ~doxhooks.errors.DoxhooksDataFileError
             If a data file does not contain valid data.
         """
-        url_data_path = self._get_url_data_path(dir_path)
-        urls = dataio.load_literals(url_data_path)
-        if not isinstance(urls, dict):
-            raise DoxhooksDataFileError("Bad data file:", url_data_path)
-        self._common_configs["urls"] = urls
+        urls = self._common_configs["urls"]
+        urls.load(self._get_url_data_path(dir_path))
         self._database.load(self._get_database_path(dir_path))
 
     def save(self, dir_path):
@@ -235,6 +231,6 @@ class ResourceEnvironment:
         ~doxhooks.errors.DoxhooksFileError
             If a data file cannot be saved.
         """
-        dataio.save_literals(
-            self._get_url_data_path(dir_path), self._common_configs["urls"])
+        urls = self._common_configs["urls"]
+        urls.save(self._get_url_data_path(dir_path))
         self._database.save(self._get_database_path(dir_path))

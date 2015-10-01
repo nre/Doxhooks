@@ -16,11 +16,12 @@ resources
     .. autoattribute:: doxhooks.resources.Resource.output_branch
     .. autoattribute:: doxhooks.resources.Resource.output_encoding
     .. autoattribute:: doxhooks.resources.Resource.output_newline
+    .. autoattribute:: doxhooks.resources.Resource.server_hostname
+    .. autoattribute:: doxhooks.resources.Resource.server_protocol
+    .. autoattribute:: doxhooks.resources.Resource.server_rewrite
+    .. autoattribute:: doxhooks.resources.Resource.server_root
     .. automethod:: doxhooks.resources.Resource.update
     .. autoattribute:: doxhooks.resources.Resource.url
-    .. autoattribute:: doxhooks.resources.Resource.url_prefix
-    .. autoattribute:: doxhooks.resources.Resource.url_rewrite
-    .. autoattribute:: doxhooks.resources.Resource.url_root
 
 .. autoclass:: doxhooks.resources.PreprocessedResource
 

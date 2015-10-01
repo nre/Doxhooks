@@ -18,9 +18,9 @@ Modules
     modules/preprocessor_contexts
     modules/preprocessor_factories
     modules/preprocessors
-    modules/resource_addresses
     modules/resource_configs
     modules/resource_environments
     modules/resource_factories
     modules/resources
+    modules/server_configs
     modules/url_mappings

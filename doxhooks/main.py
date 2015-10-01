@@ -22,6 +22,7 @@ import os
 import doxhooks.fileio as fileio
 from doxhooks.dependency_databases import DependencyDatabase
 from doxhooks.resource_environments import ResourceEnvironment
+from doxhooks.url_mappings import URLMapping
 
 
 __all__ = [
@@ -103,13 +104,17 @@ class Doxhooks:
             Keyword-only. The path to a directory where the data files
             are loaded and saved. Defaults to the current directory.
         """
+        url_mapping = URLMapping()
+        if urls:
+            url_mapping.update(urls)
+
         self._environment = ResourceEnvironment(
             resource_configs,
             {
                 "input_branches": input_branches or {},
                 "output_branches": output_branches or {},
                 "url_branches": url_branches or {},
-                "urls": urls or {},
+                "urls": url_mapping,
             },
             DependencyDatabase(),
             reverse_order=reverse_order,

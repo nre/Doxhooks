@@ -53,14 +53,16 @@ class Resource:
         The encoding used when writing to output files.
     output_newline
         The *newline* argument used when writing to output files.
+    server_protocol
+        The protocol (*scheme*) in the default URL.
+    server_hostname
+        The host name (*domain name*) in the default URL.
+    server_root
+        The path on the server that the default-URL path is relative to.
+    server_rewrite
+        A value that is used to rewrite the path in the default URL.
     url
         The URL of the resource.
-    url_prefix
-        The domain name that the default URL starts with.
-    url_root
-        The path to a server root directory.
-    url_rewrite
-        A value that is used to rewrite the filename in the default URL.
     update
         Update the output files and URL and return the input file paths.
     new
@@ -95,13 +97,14 @@ class Resource:
     `~doxhooks.resource_factories.ResourceFactory`.
     """
 
-    # The input_* and output_* class attributes below should really be
-    # class attributes of FileDomain and FileTree, but are kept in the
-    # Resource namespace for the convenience of the user: A new class of
-    # resource with new input and output branches can be defined by
-    # subclassing only Resource, without having to subclass the
-    # FileDomain and FileTree classes too. The downside is some code
-    # duplication and pseudo-namespacing (i.e. "_" instead of ".").
+    # The input_*, output_* and server_* class attributes below should
+    # really be class attributes of InputFileDomain, OutputFileDomain
+    # and ServerConfiguration, but are kept in the Resource namespace
+    # for the convenience of the user, e.g.: A new class of resource
+    # with new input and output branches can be defined by subclassing
+    # only Resource, without having to subclass other classes too. The
+    # downside is some code duplication and pseudo-namespacing (i.e.
+    # "_" instead of ".").
 
     input_branch = os.curdir
     """
@@ -155,39 +158,51 @@ class Resource:
         Input files are always opened with `universal newlines`:term:.
     """
 
-    url_prefix = ""
+    server_protocol = None
     """
-    The domain name that the default URL starts with.
-
-    *str*
-
-    The prefix can also include a scheme name and port number, etc.
-    Defaults to the empty string.
-    """
-
-    url_root = None
-    """
-    The path to a server root directory.
+    The protocol (*scheme*) in the default URL.
 
     *str or None*
 
-    The absolute path in the default URL derives from the output-file
-    path relative to this path. Defaults to ``None``.
+    See `~doxhooks.server_configs.ServerConfiguration` for details.
+    Defaults to ``None``.
     """
 
-    url_rewrite = None
+    server_hostname = None
     """
-    A value that is used to rewrite the filename in the default URL.
+    The host name (*domain name*) in the default URL.
 
-    The value replaces a substring ``"{}"`` in the filename in the
-    default URL. Defaults to ``None``, which denotes that the filename
-    will not be rewritten.
+    *str or None*
+
+    See `~doxhooks.server_configs.ServerConfiguration` for details.
+    Defaults to ``None``.
+    """
+
+    server_root = None
+    """
+    The path on the server that the default-URL path is relative to.
+
+    *str or None*
+
+    See `~doxhooks.server_configs.ServerConfiguration` for details.
+    Defaults to ``None``.
+    """
+
+    server_rewrite = None
+    """
+    A value that is used to rewrite the path in the default URL.
+
+    *object*
+
+    See `~doxhooks.filetrees.FileTree.path` for details. Defaults to
+    ``None``.
     """
 
     def __init__(
-            self, *, id, address, input_file_domain, output_file_domain):
+            self, *, id, input_file_domain, output_file_domain, server_config,
+            urls):
         """
-        Initialise the resource with an identity, files and a URL field.
+        Initialise the resource with an identity and configurations.
 
         A new resource is more conveniently obtained by calling the
         class method `Resource.new`.
@@ -196,12 +211,14 @@ class Resource:
         ----------
         id : ~collections.abc.Hashable
             Keyword-only. The identity of the resource.
-        address : ~doxhooks.resource_addresses.ResourceAddress
-            Keyword-only. The address (URL) field of the resource.
         input_file_domain : ~doxhooks.file_domains.InputFileDomain
             Keyword-only. The input-file domain of the resource.
         output_file_domain : ~doxhooks.file_domains.OutputFileDomain
             Keyword-only. The output-file domain of the resource.
+        server_config : ~doxhooks.server_configs.ServerConfiguration
+            Keyword-only. A configuration for computing the default URL.
+        urls : ~doxhooks.url_mappings.URLMapping
+            Keyword-only. A mapping of resource identities to URLs.
 
         Attributes
         ----------
@@ -209,9 +226,10 @@ class Resource:
             The argument of `id`.
         """
         self.id = id  # A parameter, not the built-in function.
-        self._address = address
         self._input = input_file_domain
         self._output = output_file_domain
+        self._server_config = server_config
+        self._urls = urls
 
     def __repr__(self):
         """
@@ -257,9 +275,8 @@ class Resource:
         """
         The URL of the resource.
 
-        The default URL of a resource is the output file path, preceded
-        by `self.url_prefix` and  modified by `self.url_root` and
-        `self.url_rewrite`.
+        The default URL of a resource depends on the *output file* path
+        and the *server configuration*.
 
         The default URL can be overridden by:
 
@@ -275,12 +292,19 @@ class Resource:
         ~doxhooks.errors.DoxhooksDataError
             If the resource URL data is invalid.
         """
-        return self._address.access()
+        try:
+            url = self._urls[self.id]
+        except KeyError:
+            url = self._server_config.url_for_file(
+                self._output.branch, self._output.filename
+            )
+            self._urls[self.id] = url
+        return url
 
     @url.setter
     def url(self, url):
         """The URL of the resource."""
-        self._address.define(url)
+        self._urls[self.id] = url
 
     def _fingerprint_files(self, rewrites=(None,)):
         # Mangle the output filename with a fingerprint of the input
@@ -327,7 +351,7 @@ class Resource:
         console.info(self.id)
         self._write()
         url = self.url
-        self._address.define(url)
+        self._urls[self.id] = url
         if url is not None:
             console.log("URL:", url)
         return self._input.paths
