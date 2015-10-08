@@ -4,6 +4,39 @@ Change Log
 Release updates are available via `Atom feed <https://github.com/nre/doxhooks/releases.atom>`_ and `Twitter <https://twitter.com/doxhooks>`_.
 
 
+0.5.0
+*****
+
+*2015-10-08*
+
+Breaking changes:
+
+* `ResourceFactory` has been rewritten to be easier to extend.
+* `FileTree` arguments are renamed:
+
+  * `leaf` -> `filename`.
+  * `branch` -> `dir_path`.
+  * `branches` -> `roots`.
+
+* `FileTree.path` returns an absolute path or an *explicitly* relative path.
+* `ResourceAddress` is superseded by `ServerConfiguration`.
+* `urls` are superseded by `DataStore` and `UrlMapping`.
+* `Preprocessor` constructor argument `root_input_file` and `Preprocessor.start` are eliminated.
+* `Preprocessor.input_files` are renamed as `Preprocessor.input_paths`.
+* `context_vars` is a keyword argument of `PreprocessorFactory.make`.
+
+
+New features:
+
+* `DataStore`.
+* Python 3.5 compatibility.
+
+
+Bug fixes:
+
+* The `Preprocessor` indentation level leaked into subsequent preprocessor stacks.
+
+
 0.4.0
 *****
 
