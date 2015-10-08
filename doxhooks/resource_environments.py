@@ -20,6 +20,7 @@ import os
 
 import doxhooks.console as console
 from doxhooks.errors import DoxhooksLookupError
+from doxhooks.filetrees import normalise_path
 
 
 __all__ = [
@@ -165,7 +166,7 @@ class ResourceEnvironment:
             path = input_path
         else:
             path = os.path.relpath(input_path, input_root)
-        path = os.path.normpath(path)
+        path = normalise_path(path)
 
         dependent_ids = self._database.retrieve_products(path)
         if not dependent_ids:

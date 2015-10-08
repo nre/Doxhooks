@@ -44,15 +44,15 @@ class InputFileDomain:
         Open an input file in reading mode and return the file object.
     """
 
-    def __init__(self, filetree, branch, filename, encoding):
+    def __init__(self, filetree, dir_path, filename, encoding):
         """
         Initialise the file domain with a file tree and file data.
 
         Parameters
         ----------
         filetree : ~doxhooks.filetrees.FileTree
-            A tree with input-file-path branches.
-        branch : str
+            A file tree with named input-root paths.
+        dir_path : str
             The path to the default directory for input files.
         filename : str
             The name of the default input file.
@@ -62,8 +62,8 @@ class InputFileDomain:
 
         Attributes
         ----------
-        branch : str
-            The argument of `branch`.
+        dir_path : str
+            The argument of `dir_path`.
         filename : str
             The argument of `filename`.
         encoding : str or None
@@ -73,7 +73,7 @@ class InputFileDomain:
             `self.open`.
         """
         self._filetree = filetree
-        self.branch = branch
+        self.dir_path = dir_path
         self.filename = filename
         self.encoding = encoding
         self.paths = set()
@@ -105,7 +105,7 @@ class InputFileDomain:
             If the path cannot be determined.
         """
         target = self.filename if filename is None else filename
-        path = self._filetree.path(self.branch, target, rewrite=rewrite)
+        path = self._filetree.path(self.dir_path, target, rewrite=rewrite)
         self.paths.add(path)
         return path
 
@@ -155,15 +155,15 @@ class OutputFileDomain:
         Mangle the output filename with the fingerprint of some strings.
     """
 
-    def __init__(self, filetree, branch, filename, encoding, newline):
+    def __init__(self, filetree, dir_path, filename, encoding, newline):
         """
         Initialise the file domain with a file tree and file data.
 
         Parameters
         ----------
         filetree : ~doxhooks.filetrees.FileTree
-            A tree with output-file-path branches.
-        branch : str
+            A file tree with named output-root paths.
+        dir_path : str
             The path to the directory for output files.
         filename : str
             The name of the output file.
@@ -176,8 +176,8 @@ class OutputFileDomain:
 
         Attributes
         ----------
-        branch : str
-            The argument of `branch`.
+        dir_path : str
+            The argument of `dir_path`.
         filename : str
             The argument of `filename`.
         encoding : str or None
@@ -186,7 +186,7 @@ class OutputFileDomain:
             The argument of `newline`.
         """
         self._filetree = filetree
-        self.branch = branch
+        self.dir_path = dir_path
         self.filename = self._initial_filename = filename
         self.encoding = encoding
         self.newline = newline
@@ -212,7 +212,8 @@ class OutputFileDomain:
         ~doxhooks.errors.DoxhooksDataError
             If the path cannot be determined.
         """
-        path = self._filetree.path(self.branch, self.filename, rewrite=rewrite)
+        path = self._filetree.path(
+            self.dir_path, self.filename, rewrite=rewrite)
         console.log("Output:", path)
         return path
 

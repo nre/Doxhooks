@@ -5,19 +5,19 @@ from doxhooks.file_domains import InputFileDomain
 
 
 class FakeFileTree:
-    def path(self, branch, leaf, *, rewrite=None):
-        return os.path.join(branch, leaf)
+    def path(self, dir_path, filename, *, rewrite=None):
+        return os.path.join(dir_path, filename)
 
 
 class BaseTestFileDomain:
-    branch = ""
+    dir_path = ""
     filename = "test.dat"
     fake_filetree = FakeFileTree()
 
     def given_an_input_file_domain(self):
         self.domain = InputFileDomain(
             self.fake_filetree,
-            self.branch,
+            self.dir_path,
             self.filename,
             "dummy_encoding",
         )

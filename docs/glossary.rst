@@ -7,9 +7,6 @@ Glossary
     address
         See `information resource`:term:.
 
-    branch
-        See `file tree`:term:.
-
     directive
         See `preprocessor directive`:term:.
 
@@ -19,9 +16,7 @@ Glossary
         Doxhooks lets you abstract away the content and maintenance of files in your project.
 
     file tree
-        Directories and files that are organised into a structure.
-
-        A *branch* is a path within that file tree.
+        Directories and files that are organised into a tree structure.
 
         `Doxhooks`:term: file trees are instances of `~doxhooks.filetrees.FileTree`.
 

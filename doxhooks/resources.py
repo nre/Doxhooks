@@ -43,11 +43,11 @@ class Resource:
 
     Class Interface
     ---------------
-    input_branch
+    input_dir_path
         The path to the default directory for input files.
     input_encoding
         The encoding used when reading from input files.
-    output_branch
+    output_dir_path
         The path to the default directory for output files.
     output_encoding
         The encoding used when writing to output files.
@@ -101,29 +101,29 @@ class Resource:
     # really be class attributes of InputFileDomain, OutputFileDomain
     # and ServerConfiguration, but are kept in the Resource namespace
     # for the convenience of the user, e.g.: A new class of resource
-    # with new input and output branches can be defined by subclassing
-    # only Resource, without having to subclass other classes too. The
-    # downside is some code duplication and pseudo-namespacing (i.e.
-    # "_" instead of ".").
+    # with new input and output directory paths can be defined by
+    # subclassing only Resource, without having to subclass other
+    # classes too. The downside is some code duplication and pseudo-
+    # namespacing (i.e. "_" instead of ".").
 
-    input_branch = os.curdir
+    input_dir_path = os.curdir
     """
     The path to the default directory for input files.
 
     *str*
 
-    The path can be relative or absolute. Defaults to the current
-    directory.
+    The path may be absolute, explicitly or implicitly relative, or
+    start with a root name.
     """
 
-    output_branch = os.curdir
+    output_dir_path = os.curdir
     """
     The path to the default directory for output files.
 
     *str*
 
-    The path can be relative or absolute. Defaults to the current
-    directory.
+    The path may be absolute, explicitly or implicitly relative, or
+    start with a root name.
     """
 
     input_encoding = None
@@ -296,7 +296,7 @@ class Resource:
             url = self._urls[self.id]
         except KeyError:
             url = self._server_config.url_for_file(
-                self._output.branch, self._output.filename
+                self._output.dir_path, self._output.filename
             )
             self._urls[self.id] = url
         return url

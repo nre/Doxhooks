@@ -10,10 +10,10 @@ resources
 
     .. automethod:: doxhooks.resources.Resource.__repr__
     .. automethod:: doxhooks.resources.Resource._write
-    .. autoattribute:: doxhooks.resources.Resource.input_branch
+    .. autoattribute:: doxhooks.resources.Resource.input_dir_path
     .. autoattribute:: doxhooks.resources.Resource.input_encoding
     .. automethod:: doxhooks.resources.Resource.new
-    .. autoattribute:: doxhooks.resources.Resource.output_branch
+    .. autoattribute:: doxhooks.resources.Resource.output_dir_path
     .. autoattribute:: doxhooks.resources.Resource.output_encoding
     .. autoattribute:: doxhooks.resources.Resource.output_newline
     .. autoattribute:: doxhooks.resources.Resource.server_hostname

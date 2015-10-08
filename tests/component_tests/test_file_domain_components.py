@@ -10,7 +10,7 @@ class BaseTestFileDomain:
         dummy_filetree = None
         self.domain = OutputFileDomain(
             dummy_filetree,
-            "dummy_branch",
+            "dummy_dir_path",
             self.filename,
             self.encoding,
             "dummy_newline",

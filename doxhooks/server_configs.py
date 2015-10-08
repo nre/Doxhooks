@@ -49,7 +49,7 @@ class ServerConfiguration:
         Parameters
         ----------
         filetree : ~doxhooks.filetrees.FileTree
-            A tree with URL-path branches.
+            A file tree with named output/URL-root paths.
         protocol : str or None, optional
             The protocol (*scheme*, e.g. ``"http://"``, ``"//"``) in the
             URLs. ``None`` denotes the empty string. Defaults to
@@ -83,15 +83,15 @@ class ServerConfiguration:
         self.root = root
         self.rewrite = rewrite
 
-    def url_for_file(self, branch, leaf=None):
+    def url_for_file(self, dir_path, filename=None):
         """
         Return the URL for a file.
 
         Parameters
         ----------
-        branch : str
+        dir_path : str
             See `doxhooks.filetrees.FileTree.path` for details.
-        leaf : str or None, optional
+        filename : str or None, optional
             See `doxhooks.filetrees.FileTree.path` for details.
 
         Returns
@@ -104,20 +104,22 @@ class ServerConfiguration:
         ~doxhooks.errors.DoxhooksDataError
             If the URL cannot be computed.
         """
-        path = self._filetree.path(branch, leaf, rewrite=self.rewrite)
+        path = self._filetree.path(dir_path, filename, rewrite=self.rewrite)
 
         if self.root is not None:
             root_path = self._filetree.path(self.root)
-            path = os.path.normpath(os.path.relpath(path, root_path))
+            path = os.path.relpath(path, root_path)
 
-        if path.startswith(os.pardir):
+        norm_path = os.path.normpath(os.path.splitdrive(path)[1])
+
+        if norm_path.startswith(os.pardir):
             raise DoxhooksDataError(
-                "URL path starts with {!r}: {!r}".format(os.pardir, path))
+                "URL path starts with {!r}: {!r}".format(os.pardir, norm_path))
 
-        slash_path = path.replace(os.sep, "/")
+        slash_path = norm_path.replace(os.sep, "/")
 
         return "{}{}/{}".format(
             self.protocol if self.protocol is not None else "",
             self.hostname if self.hostname is not None else "",
-            slash_path.lstrip("/"),
+            "" if slash_path == os.curdir else slash_path.lstrip("/"),
         )

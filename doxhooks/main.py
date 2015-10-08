@@ -74,7 +74,7 @@ class Doxhooks:
 
     def __init__(
             self, resource_configs, *, reverse_order=False,
-            input_branches=None, output_branches=None, url_branches=None,
+            input_roots=None, output_roots=None, url_roots=None,
             urls=None, data_dir_path=os.curdir):
         """
         Initialise Doxhooks with user data and internal components.
@@ -88,15 +88,15 @@ class Doxhooks:
             Keyword-only. Whether the order of iterating over
             `resource_configs` should be reversed. Defaults to
             ``False``.
-        input_branches : dict or None, optional
-            Keyword-only. The names and paths of directories in the
-            input-file tree. Defaults to ``None``.
-        output_branches : dict or None, optional
-            Keyword-only. The names and paths of directories in the
-            output-file tree. Defaults to ``None``.
-        url_branches : dict or None, optional
-            Keyword-only. The names and paths of directories in the
-            resource URLs. Defaults to ``None``.
+        input_roots : dict or None, optional
+            Keyword-only. Named root paths in the input-file tree.
+            Defaults to ``None``.
+        output_roots : dict or None, optional
+            Keyword-only. Named root paths in the output-file tree.
+            Defaults to ``None``.
+        url_roots : dict or None, optional
+            Keyword-only. Named root paths in the resource URLs.
+            Defaults to ``None``.
         urls : dict or None, optional
             Keyword-only. A dictionary of resource identities and
             predefined URLs. Defaults to ``None``.
@@ -111,10 +111,10 @@ class Doxhooks:
         self._environment = ResourceEnvironment(
             resource_configs,
             {
-                "input_branches": input_branches or {},
-                "output_branches": output_branches or {},
-                "url_branches": url_branches or {},
                 "urls": url_mapping,
+                "input_roots": input_roots or {},
+                "output_roots": output_roots or {},
+                "url_roots": url_roots or {},
             },
             DependencyDatabase(),
             reverse_order=reverse_order,

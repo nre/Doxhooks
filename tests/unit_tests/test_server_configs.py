@@ -8,8 +8,8 @@ from doxhooks_pytest import withraises
 
 
 class FakeFileTree:
-    def path(self, branch, *args, **kwargs):
-        return branch
+    def path(self, dir_path, *args, **kwargs):
+        return dir_path
 
 
 class BaseTestServerConfiguration:
@@ -22,8 +22,8 @@ class BaseTestServerConfiguration:
         )
 
     @withraises
-    def when_computing_the_url_for_a_file(self, branch, leaf=None):
-        self.url = self.server_config.url_for_file(branch, leaf)
+    def when_computing_the_url_for_a_file(self, dir_path, filename=None):
+        self.url = self.server_config.url_for_file(dir_path, filename)
 
 
 class TestURL(BaseTestServerConfiguration):
@@ -48,12 +48,14 @@ class TestURL(BaseTestServerConfiguration):
     @mark.parametrize(
         "server_root, path, url", [
             (None, "/one/test.dat", "/one/test.dat"),
+            (None, "./one/test.dat", "/one/test.dat"),
             (None, "one/test.dat", "/one/test.dat"),
             (mark.skipif(os.sep != "\\", reason="Windows backslash separator")
                 ((None, "one\\test.dat", "/one/test.dat"))),
             ("", "one/test.dat", "/one/test.dat"),
             (os.curdir, "one/test.dat", "/one/test.dat"),
             ("one", "one/test.dat", "/test.dat"),
+            ("one/test.dat", "one/test.dat", "/"),
         ])
     def test_a_url_path_is_relative_to_a_path_on_the_server(
             self, server_root, path, url):

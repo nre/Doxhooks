@@ -132,8 +132,8 @@ class ResourceFactory:
             The input-file tree.
         """
         return FileTree(
-            self._get("input_branches"),
-            name="`input_branches`",
+            self._get("input_roots"),
+            name="`input_roots`",
         )
 
     def _make_input_file_domain(self):
@@ -147,7 +147,7 @@ class ResourceFactory:
         """
         return InputFileDomain(
             self._get("input_filetree"),
-            self._class.input_branch,
+            self._class.input_dir_path,
             self._get("input_filename"),
             self._class.input_encoding,
         )
@@ -162,8 +162,8 @@ class ResourceFactory:
             The output-file tree.
         """
         return FileTree(
-            self._get("output_branches"),
-            name="`output_branches`",
+            self._get("output_roots"),
+            name="`output_roots`",
         )
 
     def _make_output_file_domain(self):
@@ -177,7 +177,7 @@ class ResourceFactory:
         """
         return OutputFileDomain(
             self._get("output_filetree"),
-            self._class.output_branch,
+            self._class.output_dir_path,
             self._get("output_filename"),
             self._class.output_encoding,
             self._class.output_newline,
@@ -194,10 +194,10 @@ class ResourceFactory:
         """
         return FileTree(
             ChainMap(
-                self._get("url_branches"),
-                self._get("output_branches"),
+                self._get("url_roots"),
+                self._get("output_roots"),
             ),
-            name="`ChainMap(url_branches, output_branches)`",
+            name="`ChainMap(url_roots, output_roots)`",
         )
 
     def _make_server_config(self):
@@ -227,10 +227,10 @@ class ResourceFactory:
             The keyword arguments for the resource constructor.
         """
         dependencies = self._configuration.copy()
-        del dependencies["input_branches"]
-        del dependencies["output_branches"]
-        del dependencies["url_branches"]
         del dependencies["urls"]
+        del dependencies["input_roots"]
+        del dependencies["output_roots"]
+        del dependencies["url_roots"]
         del dependencies["input_filename"]
         del dependencies["output_filename"]
 
