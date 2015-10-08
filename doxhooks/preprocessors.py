@@ -186,9 +186,9 @@ class Preprocessor:
             except Exception:
                 # inspect.stack()[1][3] references the name
                 # of the function that called insert_lines:
-                name = name or inspect.stack()[1][3]
+                name = name or inspect.stack()[1][3] + "()"
                 console.error_trace(
-                    "{!r}\n    >> line {:3}".format(name, line_no), line)
+                    "In: {}\n    >> line {:3}".format(name, line_no), line)
                 raise
 
             if output_line == "\n":
