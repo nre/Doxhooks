@@ -59,7 +59,7 @@ class PreprocessorFactory:
         self._context_vars = context_vars
         self._input_file_domain = input_file_domain
 
-    def make(self, output_file, **context_vars):
+    def make(self, output_file, *args, context_vars=None, **kwargs):
         r"""
         Return a new preprocessor that is customised for a resource.
 
@@ -68,9 +68,13 @@ class PreprocessorFactory:
         output_file : TextIO
             An open file object that the preprocessor writes its output
             to.
-        \**context_vars
-            These keyword parameters and their arguments define the
-            names and values of additional preprocessor variables.
+        \*args
+            Positional arguments passed to the preprocessor constructor.
+        context_vars : dict or None, optional
+            Keyword-only. The names and values of additional
+            preprocessor variables. Defaults to ``None``.
+        \**kwargs
+            Keyword arguments passed to the preprocessor constructor.
 
         Returns
         -------
@@ -86,4 +90,4 @@ class PreprocessorFactory:
 
         return self._preprocessor_class(
             self._preprocessor_context_class(**variables),
-            self._input_file_domain, output_file)
+            self._input_file_domain, output_file, *args, **kwargs)

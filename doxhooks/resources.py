@@ -445,11 +445,11 @@ class PreprocessedResource(Resource):
         super().__init__(**kwargs)
         self._preprocessor_factory = preprocessor_factory
 
-    def _preprocess(self, **context_vars):
+    def _preprocess(self, context_vars=None):
         # Preprocess the input file and return the output string.
         with io.StringIO() as output:
             preprocessor = self._preprocessor_factory.make(
-                output, **context_vars)
+                output, context_vars=context_vars)
             preprocessor.insert_file(self._input.filename, idempotent=True)
             return output.getvalue()
 
