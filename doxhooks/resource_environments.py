@@ -6,9 +6,6 @@ The resources in the environment can be updated individually
 (`ResourceEnvironment.update_all`) or only if they depend on a given
 input file (`ResourceEnvironment.update_dependents`).
 
-The environment data can be loaded and saved
-(`ResourceEnvironment.load`, `ResourceEnvironment.save`).
-
 Exports
 -------
 ResourceEnvironment
@@ -40,10 +37,6 @@ class ResourceEnvironment:
         Update all resources configured in this environment.
     update_dependents
         Update all resources that depend on a given input file.
-    load
-        Replace the environment data with data read from files.
-    save
-        Save the environment data in data files.
     """
 
     def __init__(
@@ -100,8 +93,7 @@ class ResourceEnvironment:
                 resource_id, self._resource_configs, "`resource_configs`")
 
         resource = config.make(id=resource_id, **self._common_configs)
-        input_paths = resource.update()
-        self._database.update_dependencies(resource_id, input_paths)
+        resource.update()
 
     @property
     def _resource_ids(self):
@@ -191,47 +183,3 @@ class ResourceEnvironment:
 
         for resource_id in update_ids:
             self.update(resource_id)
-
-    def _get_url_data_path(self, dir_path):
-        return os.path.join(dir_path, "resources-urls.dat")
-
-    def _get_database_path(self, dir_path):
-        return os.path.join(dir_path, "resources-input_paths.dat")
-
-    def load(self, dir_path):
-        """
-        Replace the environment data with data read from files.
-
-        Parameters
-        ----------
-        path : str
-            The path to the data directory.
-
-        Raises
-        ------
-        ~doxhooks.errors.DoxhooksFileError
-            If a data file cannot be read.
-        ~doxhooks.errors.DoxhooksDataFileError
-            If a data file does not contain valid data.
-        """
-        urls = self._common_configs["urls"]
-        urls.load(self._get_url_data_path(dir_path))
-        self._database.load(self._get_database_path(dir_path))
-
-    def save(self, dir_path):
-        """
-        Save the environment data in data files.
-
-        Parameters
-        ----------
-        path : str
-            The path to the data directory.
-
-        Raises
-        ------
-        ~doxhooks.errors.DoxhooksFileError
-            If a data file cannot be saved.
-        """
-        urls = self._common_configs["urls"]
-        urls.save(self._get_url_data_path(dir_path))
-        self._database.save(self._get_database_path(dir_path))

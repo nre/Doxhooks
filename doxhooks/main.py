@@ -20,6 +20,7 @@ Doxhooks
 import os
 
 import doxhooks.fileio as fileio
+from doxhooks.data_stores import DataStore
 from doxhooks.dependency_databases import DependencyDatabase
 from doxhooks.resource_environments import ResourceEnvironment
 from doxhooks.url_mappings import URLMapping
@@ -75,7 +76,7 @@ class Doxhooks:
     def __init__(
             self, resource_configs, *, reverse_order=False,
             input_roots=None, output_roots=None, url_roots=None,
-            urls=None, data_dir_path=os.curdir):
+            urls=None, data_dir_path=os.curdir, data_objects=None):
         """
         Initialise Doxhooks with user data and internal components.
 
@@ -103,23 +104,35 @@ class Doxhooks:
         data_dir_path : str, optional
             Keyword-only. The path to a directory where the data files
             are loaded and saved. Defaults to the current directory.
+        data_objects : dict, optional
+            Keyword-only. Data objects for the *data store*. Defaults to
+            ``None``.
         """
+        dependency_database = DependencyDatabase()
+
         url_mapping = URLMapping()
         if urls:
             url_mapping.update(urls)
 
+        data_store = DataStore(data_dir_path)
+        data_store["resource_id-input_paths"] = dependency_database
+        data_store["resource_id-url"] = url_mapping
+        if data_objects:
+            data_store.update(data_objects)
+
         self._environment = ResourceEnvironment(
             resource_configs,
             {
-                "urls": url_mapping,
+                "data_store": data_store,
                 "input_roots": input_roots or {},
                 "output_roots": output_roots or {},
                 "url_roots": url_roots or {},
             },
-            DependencyDatabase(),
+            dependency_database,
             reverse_order=reverse_order,
         )
-        self._data_dir_path = data_dir_path
+
+        self._data = data_store
 
     def update(self, resource_id):
         """
@@ -206,7 +219,7 @@ class Doxhooks:
 
     def load(self):
         """
-        Replace the environment data with data read from files.
+        Load data from files.
 
         Returns
         -------
@@ -218,14 +231,14 @@ class Doxhooks:
         ~doxhooks.errors.DoxhooksFileError
             If a data file cannot be read.
         ~doxhooks.errors.DoxhooksDataFileError
-            If a data file does not contain valid data.
+            If a data file contains invalid data.
         """
-        self._environment.load(self._data_dir_path)
+        self._data.load_all()
         return self
 
     def save(self):
         """
-        Save the environment data in data files.
+        Save data in files.
 
         Returns
         -------
@@ -234,8 +247,10 @@ class Doxhooks:
 
         Raises
         ------
+        ~doxhooks.errors.DoxhooksDataError
+            If some data cannot be saved.
         ~doxhooks.errors.DoxhooksFileError
             If a data file cannot be saved.
         """
-        self._environment.save(self._data_dir_path)
+        self._data.save_all()
         return self

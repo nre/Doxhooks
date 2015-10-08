@@ -5,6 +5,7 @@ Modules
     :maxdepth: 1
 
     modules/console
+    modules/data_stores
     modules/dataio
     modules/dependency_databases
     modules/errors

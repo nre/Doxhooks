@@ -227,7 +227,6 @@ class ResourceFactory:
             The keyword arguments for the resource constructor.
         """
         dependencies = self._configuration.copy()
-        del dependencies["urls"]
         del dependencies["input_roots"]
         del dependencies["output_roots"]
         del dependencies["url_roots"]
@@ -238,7 +237,6 @@ class ResourceFactory:
             input_file_domain=self._get("input_file_domain"),
             output_file_domain=self._get("output_file_domain"),
             server_config=self._get("server_config"),
-            urls=self._get("urls"),
         )
         return dependencies
 
@@ -326,9 +324,10 @@ class PreprocessedResourceFactory(ResourceFactory):
 
         * *resource* is a reference to the preprocessed information
           resource.
+        * *data* is a reference to the data store.
         * *encoding* is the *output encoding* of the preprocessed
           information resource.
-        * *urls* is a dictionary of resource identities and URLs.
+        * *urls* is a mapping of resource identities to URLs.
 
         Returns
         -------
@@ -340,10 +339,14 @@ class PreprocessedResourceFactory(ResourceFactory):
         ~doxhooks.errors.DoxhooksDataError
             If the resource configuration data is invalid.
         """
+        data_store = self._get("data_store")
+        urls = data_store["resource_id-url"]
+
         context_vars = self._configuration.setdefault("context_vars", {})
 
+        context_vars.setdefault("data", data_store)
         context_vars.setdefault("encoding", self._class.output_encoding)
-        context_vars.setdefault("urls", self._get("urls"))
+        context_vars.setdefault("urls", urls)
 
         preprocessed_resource = super().make()
         context_vars.setdefault("resource", preprocessed_resource)

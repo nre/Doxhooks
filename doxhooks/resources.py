@@ -199,8 +199,8 @@ class Resource:
     """
 
     def __init__(
-            self, *, id, input_file_domain, output_file_domain, server_config,
-            urls):
+            self, *, id, data_store, input_file_domain, output_file_domain,
+            server_config):
         """
         Initialise the resource with an identity and configurations.
 
@@ -211,14 +211,14 @@ class Resource:
         ----------
         id : ~collections.abc.Hashable
             Keyword-only. The identity of the resource.
+        data_store : ~doxhooks.data_stores.DataStore
+            Keyword-only. A collection of resource-data objects.
         input_file_domain : ~doxhooks.file_domains.InputFileDomain
             Keyword-only. The input-file domain of the resource.
         output_file_domain : ~doxhooks.file_domains.OutputFileDomain
             Keyword-only. The output-file domain of the resource.
         server_config : ~doxhooks.server_configs.ServerConfiguration
             Keyword-only. A configuration for computing the default URL.
-        urls : ~doxhooks.url_mappings.URLMapping
-            Keyword-only. A mapping of resource identities to URLs.
 
         Attributes
         ----------
@@ -226,10 +226,10 @@ class Resource:
             The argument of `id`.
         """
         self.id = id  # A parameter, not the built-in function.
+        self._data = data_store
         self._input = input_file_domain
         self._output = output_file_domain
         self._server_config = server_config
-        self._urls = urls
 
     def __repr__(self):
         """
@@ -292,19 +292,21 @@ class Resource:
         ~doxhooks.errors.DoxhooksDataError
             If the resource URL data is invalid.
         """
+        urls = self._data["resource_id-url"]
         try:
-            url = self._urls[self.id]
+            url = urls[self.id]
         except KeyError:
             url = self._server_config.url_for_file(
                 self._output.dir_path, self._output.filename
             )
-            self._urls[self.id] = url
+            urls[self.id] = url
         return url
 
     @url.setter
     def url(self, url):
         """The URL of the resource."""
-        self._urls[self.id] = url
+        urls = self._data["resource_id-url"]
+        urls[self.id] = url
 
     def _fingerprint_files(self, rewrites=(None,)):
         # Mangle the output filename with a fingerprint of the input
@@ -334,11 +336,6 @@ class Resource:
         """
         Update the output files and URL and return the input file paths.
 
-        Returns
-        -------
-        set
-            The paths to the input files that the resource depends on.
-
         Raises
         ------
         ~doxhooks.errors.DoxhooksDataError
@@ -349,12 +346,16 @@ class Resource:
         """
         console.blank_line()
         console.info(self.id)
+
         self._write()
+        dependency_database = self._data["resource_id-input_paths"]
+        dependency_database.update_dependencies(self.id, self._input.paths)
+
         url = self.url
-        self._urls[self.id] = url
+        urls = self._data["resource_id-url"]
+        urls[self.id] = url
         if url is not None:
             console.log("URL:", url)
-        return self._input.paths
 
 
 class PreprocessedResource(Resource):
