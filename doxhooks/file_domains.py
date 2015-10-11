@@ -3,7 +3,7 @@ High-level file operations and data.
 
 An input-file domain returns the paths (`InputFileDomain.path`) and file
 objects (`InputFileDomain.open`) of input files. The paths to these
-files are remembered (`InputFileDomain.paths`).
+file objects are remembered (`InputFileDomain.paths`).
 
 An output-file domain returns the paths (`OutputFileDomain.path`) and
 file objects (`OutputFileDomain.open`) of output files. The contents of
@@ -69,8 +69,7 @@ class InputFileDomain:
         encoding : str or None
             The argument of `encoding`.
         paths : set
-            All the file paths that have been handled by `self.path` and
-            `self.open`.
+            Paths to all files opened by `self.open`.
         """
         self._filetree = filetree
         self.dir_path = dir_path
@@ -81,8 +80,6 @@ class InputFileDomain:
     def path(self, filename=None, *, rewrite=None):
         """
         Return the path to an input file.
-
-        The path is added to `self.paths`.
 
         Parameters
         ----------
@@ -105,9 +102,7 @@ class InputFileDomain:
             If the path cannot be determined.
         """
         target = self.filename if filename is None else filename
-        path = self._filetree.path(self.dir_path, target, rewrite=rewrite)
-        self.paths.add(path)
-        return path
+        return self._filetree.path(self.dir_path, target, rewrite=rewrite)
 
     def open(self, filename=None):
         """
@@ -134,7 +129,9 @@ class InputFileDomain:
         ~doxhooks.errors.DoxhooksFileError
             If the file cannot be opened.
         """
-        return fileio.open_input(self.path(filename), self.encoding)
+        path = self.path(filename)
+        self.paths.add(path)
+        return fileio.open_input(path, self.encoding)
 
 
 class OutputFileDomain:

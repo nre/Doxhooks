@@ -10,30 +10,29 @@ class FakeFileTree:
 
 
 class BaseTestFileDomain:
-    dir_path = ""
+    dir_path = "one"
     filename = "test.dat"
+    path = os.path.join(dir_path, filename)
     fake_filetree = FakeFileTree()
 
     def given_an_input_file_domain(self):
         self.domain = InputFileDomain(
             self.fake_filetree,
             self.dir_path,
-            self.filename,
+            "dummy_filename",
             "dummy_encoding",
         )
 
 
 class TestRememberInputPaths(BaseTestFileDomain):
-    def test_an_input_file_domain_remembers_all_input_paths(self):
+    def test_the_paths_to_opened_files_are_remembered(self):
         self.given_an_input_file_domain()
-        # and input filenames which have been passed to the domain,
-        self.domain.path()
-        self.domain.path("test2.dat")
+        # that has opened a file,
         with mock.patch("doxhooks.fileio.open_input", autospec=True):
-            self.domain.open("test3.dat")
+            self.domain.open(self.filename)
 
-        # when getting the paths to all input files in that domain
+        # when getting the paths to all opened input files in that domain
         paths = self.domain.paths
 
-        # then the paths to those filenames are returned.
-        assert paths == {self.filename, "test2.dat", "test3.dat"}
+        # then those paths are the path to that file.
+        assert paths == {self.path}
