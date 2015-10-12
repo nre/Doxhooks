@@ -20,4 +20,4 @@ Beginners can start using Doxhooks by customising the example scripts. Users wit
 * `Documentation <http://doxhooks.readthedocs.org/>`_
 * `Source code <https://github.com/nre/doxhooks>`_
 * `Help, bugs, suggestions <https://github.com/nre/doxhooks/issues>`_
-* Release updates via `Atom feed <https://github.com/nre/doxhooks/releases.atom>`_ and `Twitter <https://twitter.com/doxhooks>`_
+* `Release updates <https://github.com/nre/doxhooks/releases.atom>`_

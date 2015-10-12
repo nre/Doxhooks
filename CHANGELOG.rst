@@ -1,7 +1,7 @@
 Change Log
 ##########
 
-Release updates are available via `Atom feed <https://github.com/nre/doxhooks/releases.atom>`_ and `Twitter <https://twitter.com/doxhooks>`_.
+Release updates are also available as an `atom feed <https://github.com/nre/doxhooks/releases.atom>`_.
 
 
 0.5.0
