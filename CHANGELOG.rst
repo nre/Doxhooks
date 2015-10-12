@@ -4,6 +4,16 @@ Change Log
 Release updates are also available as an `atom feed <https://github.com/nre/doxhooks/releases.atom>`_.
 
 
+0.6.0
+*****
+
+*2015-10-12*
+
+Breaking changes:
+
+* `InputFileDomain.path` does not add the computed path to `InputFileDomain.paths`.
+
+
 0.5.0
 *****
 
